@@ -3,7 +3,9 @@ using QAirMonitor.Abstract.Persist;
 using QAirMonitor.Domain.Models;
 using QAirMonitor.Persist.Context;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace QAirMonitor.Persist.Repositories
 {
@@ -13,7 +15,10 @@ namespace QAirMonitor.Persist.Repositories
         {
             using (var context = new AppDataContext())
             {
-                return await context.Readings.ToListAsync();
+                return await context.Readings
+                    .OrderByDescending(r => r.ReadingDateTime)
+                    .ThenByDescending(r => r.ReadingID)
+                    .ToListAsync();
             }
         }
 
@@ -22,6 +27,7 @@ namespace QAirMonitor.Persist.Repositories
             using (var context = new AppDataContext())
             {
                 await context.Readings.AddAsync(model);
+                await context.SaveChangesAsync();
             }
         }
     }

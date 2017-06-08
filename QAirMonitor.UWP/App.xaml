@@ -1,5 +1,9 @@
-﻿<Application x:Class="QAirMonitor.UWP.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-</Application>
+﻿<common:BootStrapper x:Class="QAirMonitor.UWP.App"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:common="using:Template10.Common"
+                     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters">
+    <common:BootStrapper.Resources>
+        <converters:StringFormatConverter x:Key="StringFormatConverter" />
+    </common:BootStrapper.Resources>
+</common:BootStrapper>

@@ -3,9 +3,117 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:m="using:QAirMonitor.Domain.Models"
+      xmlns:vm="using:QAirMonitor.UWP.ViewModels"
+      xmlns:chart="using:Telerik.UI.Xaml.Controls.Chart"
       mc:Ignorable="d">
-
+    <Page.Resources>
+        <Color x:Key="TemperatureChartColor">Orange</Color>
+        <Color x:Key="HumidityChartColor">LightBlue</Color>
+        <DataTemplate x:Key="ReadingItemTemplate"
+                      x:DataType="m:ReadingModel">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind ReadingDateTime}" />
+                <TextBlock Text="{x:Bind Temperature}"
+                           Margin="10,0"
+                           Grid.Column="1" />
+                <TextBlock Text="{x:Bind Humidity}"
+                           Grid.Column="2" />
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Page.DataContext>
+        <vm:MainPageViewModel x:Name="ViewModel" />
+    </Page.DataContext>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="75" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <chart:RadCartesianChart Zoom="{x:Bind ViewModel.ZoomFactor, Mode=OneWay}"
+                                 ScrollOffset="{x:Bind ViewModel.ScrollOffset, Mode=OneWay}"
+                                 Margin="10">
+            <chart:RadCartesianChart.Palette>
+                <chart:ChartPalette>
+                    <chart:ChartPalette.FillEntries>
+                        <chart:PaletteEntryCollection>
+                            <SolidColorBrush Color="{ThemeResource TemperatureChartColor}" />
+                            <SolidColorBrush Color="{ThemeResource HumidityChartColor}" />
+                        </chart:PaletteEntryCollection>
+                    </chart:ChartPalette.FillEntries>
+                </chart:ChartPalette>
+            </chart:RadCartesianChart.Palette>
+            <chart:LineSeries ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
+                <chart:LineSeries.HorizontalAxis>
+                    <chart:DateTimeContinuousAxis MajorStep="1"
+                                                  MajorStepUnit="Hour"
+                                                  LabelInterval="2"
+                                                  LabelFitMode="Rotate"
+                                                  LabelFormat="{}{0:h:mm tt}" />
+                </chart:LineSeries.HorizontalAxis>
+                <chart:LineSeries.VerticalAxis>
+                    <chart:LinearAxis Minimum="-10"
+                                      Maximum="30"
+                                      MajorStep="5"
+                                      Title="Temperature"
+                                      LabelFormat="{}{0:0°C}"
+                                      Foreground="{ThemeResource TemperatureChartColor}" />
+                </chart:LineSeries.VerticalAxis>
+                <chart:LineSeries.CategoryBinding>
+                    <chart:PropertyNameDataPointBinding PropertyName="ReadingDateTime" />
+                </chart:LineSeries.CategoryBinding>
+                <chart:LineSeries.ValueBinding>
+                    <chart:PropertyNameDataPointBinding PropertyName="Temperature" />
+                </chart:LineSeries.ValueBinding>
+            </chart:LineSeries>
+            <chart:LineSeries ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
+                <chart:LineSeries.HorizontalAxis>
+                    <chart:DateTimeContinuousAxis MajorStep="1"
+                                                  MajorStepUnit="Day"
+                                                  VerticalLocation="Top"
+                                                  LabelFormat="{}{0:M/d/yy}" />
+                </chart:LineSeries.HorizontalAxis>
+                <chart:LineSeries.VerticalAxis>
+                    <chart:LinearAxis Minimum="0"
+                                      Maximum="100"
+                                      HorizontalLocation="Right"
+                                      Title="Relative Humidity"
+                                      LabelFormat="{}{0:0\%}"
+                                      Foreground="{ThemeResource HumidityChartColor}" />
+                </chart:LineSeries.VerticalAxis>
+                <chart:LineSeries.CategoryBinding>
+                    <chart:PropertyNameDataPointBinding PropertyName="ReadingDateTime" />
+                </chart:LineSeries.CategoryBinding>
+                <chart:LineSeries.ValueBinding>
+                    <chart:PropertyNameDataPointBinding PropertyName="Humidity" />
+                </chart:LineSeries.ValueBinding>
+            </chart:LineSeries>
+        </chart:RadCartesianChart>
+        <toolkit:RangeSelector Minimum="0"
+                               Maximum="{x:Bind ViewModel.RangeSize, Mode=OneWay}"
+                               RangeMin="{x:Bind ViewModel.RangeMin, Mode=TwoWay}"
+                               RangeMax="{x:Bind ViewModel.RangeMax, Mode=TwoWay}"
+                               VerticalAlignment="Center"
+                               Grid.Row="1" />
+        <RelativePanel Grid.Row="2">
+            <ToggleSwitch x:Name="AutoScrollToggle"
+                          Header="Auto-scroll to new reading"
+                          IsOn="{x:Bind ViewModel.AutoScroll, Mode=TwoWay}"
+                          Margin="10" />
+            <ToggleSwitch Header="Maintain scope during auto-scroll"
+                          IsOn="{x:Bind ViewModel.MaintainScope, Mode=TwoWay}"
+                          Margin="10"
+                          RelativePanel.RightOf="AutoScrollToggle" />
+            <!--<Button Content="Add Sample Readings"
+                    Click="{x:Bind ViewModel.AddSampleReadings}"
+                    RelativePanel.RightOf="StartButton" />-->
+        </RelativePanel>
     </Grid>
 </Page>

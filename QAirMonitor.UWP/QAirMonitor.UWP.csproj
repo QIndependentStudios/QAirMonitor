@@ -99,6 +99,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\MainPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -130,6 +131,29 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>5.3.3</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>1.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
+      <Version>1.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Template10">
+      <Version>1.1.12</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QAirMonitor.Abstract\QAirMonitor.Abstract.csproj">
+      <Project>{BFA6C60F-4DD1-45E6-936B-6DBE55F14CF1}</Project>
+      <Name>QAirMonitor.Abstract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QAirMonitor.Domain\QAirMonitor.Domain.csproj">
+      <Project>{4212488E-30EF-47E1-A752-0BFA9357154E}</Project>
+      <Name>QAirMonitor.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QAirMonitor.Persist\QAirMonitor.Persist.csproj">
+      <Project>{EDC6CBFE-1439-4E39-BEAA-648054EF3ABF}</Project>
+      <Name>QAirMonitor.Persist</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
