@@ -143,15 +143,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QAirMonitor.Abstract\QAirMonitor.Abstract.csproj">
-      <Project>{BFA6C60F-4DD1-45E6-936B-6DBE55F14CF1}</Project>
+      <Project>{bfa6c60f-4dd1-45e6-936b-6dbe55f14cf1}</Project>
       <Name>QAirMonitor.Abstract</Name>
     </ProjectReference>
     <ProjectReference Include="..\QAirMonitor.Domain\QAirMonitor.Domain.csproj">
-      <Project>{4212488E-30EF-47E1-A752-0BFA9357154E}</Project>
+      <Project>{4212488e-30ef-47e1-a752-0bfa9357154e}</Project>
       <Name>QAirMonitor.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\QAirMonitor.Persist\QAirMonitor.Persist.csproj">
-      <Project>{EDC6CBFE-1439-4E39-BEAA-648054EF3ABF}</Project>
+      <Project>{edc6cbfe-1439-4e39-beaa-648054ef3abf}</Project>
       <Name>QAirMonitor.Persist</Name>
     </ProjectReference>
   </ItemGroup>
