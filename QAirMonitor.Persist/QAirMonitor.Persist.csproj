@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QAirMonitor.Abstract\QAirMonitor.Abstract.csproj" />
+    <ProjectReference Include="..\QAirMonitor.Domain\QAirMonitor.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
