@@ -7,8 +7,8 @@
     <ProjectGuid>{E3F4803D-8F66-4D28-9356-45E8BC89BB75}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QAirMonitor.UWP.Hardware</RootNamespace>
-    <AssemblyName>QAirMonitor.UWP.Hardware</AssemblyName>
+    <RootNamespace>QAirMonitor.Hardware.UWP</RootNamespace>
+    <AssemblyName>QAirMonitor.Hardware.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
@@ -109,7 +109,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sensors\DhtTempHumiditySensor.cs" />
     <Compile Include="Sensors\VirtualTempHumiditySensor.cs" />
-    <EmbeddedResource Include="Properties\QAirMonitor.UWP.Hardware.rd.xml" />
+    <EmbeddedResource Include="Properties\QAirMonitor.Hardware.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">

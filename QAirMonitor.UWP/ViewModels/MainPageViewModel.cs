@@ -2,7 +2,7 @@
 using QAirMonitor.Abstract.Sensors;
 using QAirMonitor.Domain.Models;
 using QAirMonitor.Persist.Repositories;
-using QAirMonitor.UWP.Hardware.Sensors;
+using QAirMonitor.Hardware.UWP.Sensors;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
