@@ -4,6 +4,7 @@ using QAirMonitor.Business.SensorDataCollection;
 using QAirMonitor.Domain.Models;
 using QAirMonitor.Hardware.UWP.Sensors;
 using QAirMonitor.Persist.Repositories;
+using QAirMonitor.UWP.Pages;
 using QAirMonitor.UWP.Timers;
 using QAirMonitor.UWP.Utils;
 using System;
@@ -207,7 +208,10 @@ namespace QAirMonitor.UWP.ViewModels
             await LoadReadings();
 
             if (App.SensorDataCollector != null)
+            {
                 App.SensorDataCollector.ReadingReceived += SensorDataCollector_ReadingReceived;
+                await UpdateDisplay(App.SensorDataCollector.LastReading, App.SensorDataCollector.LastReadingAttempts);
+            }
 
             await base.OnNavigatedToAsync(parameter, mode, state);
         }
@@ -219,34 +223,44 @@ namespace QAirMonitor.UWP.ViewModels
 
             return base.OnNavigatingFromAsync(args);
         }
+
+        private async Task UpdateDisplay(ReadingModel reading, int attempts)
+        {
+            if (reading == null)
+            {
+                Temperature = "Unknown";
+                Humidity = "Unknown";
+                LastReading = $"Read on {DateTime.Now:M/d/yyyy h:mm:ss tt} with {attempts} attempt(s).";
+                return;
+            }
+
+            Temperature = $"{reading.Temperature:0.00}°C";
+            Humidity = $"{reading.Humidity:0.00}%";
+            LastReading = $"Read on {reading.ReadingDateTime:M/d/yyyy h:mm:ss tt} with {attempts} attempt(s).";
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => { Readings.Insert(0, reading); });
+
+            SetRangeSize();
+            ScrollRangeToLatest();
+        }
         #endregion
 
         #region Event Handlers
         private async void SensorDataCollector_ReadingReceived(object sender, ISensorReadingReceivedEventArgs<ReadingModel> e)
         {
-            if (e.NewReading == null)
-            {
-                Temperature = "Error";
-                Humidity = "Error";
-                LastReading = $"Read on {DateTime.Now:M/d/yyyy h:mm:ss tt} with {e.Attempts} attempt(s).";
-                return;
-            }
-
-            Temperature = $"{e.NewReading.Temperature:0.00}°C";
-            Humidity = $"{e.NewReading.Humidity:0.00}%";
-            LastReading = $"Read on {e.NewReading.ReadingDateTime:M/d/yyyy h:mm:ss tt} with {e.Attempts} attempt(s).";
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { Readings.Insert(0, e.NewReading); });
-
-            SetRangeSize();
-            ScrollRangeToLatest();
+            await UpdateDisplay(e.NewReading, e.Attempts);
         }
 
         public async void Reset()
         {
             await LoadReadings();
             AutoScroll = true;
+        }
+
+        public void ViewLogs()
+        {
+            NavigationService.Navigate(typeof(LogPage));
         }
 
         public async Task AddSampleReadings()

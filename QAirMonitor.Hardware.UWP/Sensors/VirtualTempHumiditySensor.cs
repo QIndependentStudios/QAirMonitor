@@ -1,4 +1,5 @@
 ﻿using QAirMonitor.Abstract.Sensors;
+using QAirMonitor.Business.Logging;
 using QAirMonitor.Domain.Sensors;
 using System;
 using System.Threading.Tasks;
@@ -29,15 +30,19 @@ namespace QAirMonitor.Hardware.UWP.Sensors
             _maxHumidityLimit = maxHumidityLimit;
         }
 
-        public Task<TempHumidityReadingResult> GetReadingAsync()
+        public async Task<TempHumidityReadingResult> GetReadingAsync()
         {
-            return Task.FromResult(new TempHumidityReadingResult
+            var reading = new TempHumidityReadingResult
             {
                 Temperature = _rand.Next((int)(_minTempLimit * 100), (int)(_maxTempLimit * 100)) / 100.0,
                 Humidity = _rand.Next((int)(_minHumidityLimit * 100), (int)(_maxHumidityLimit * 100)) / 100.0,
                 ReadingDateTime = DateTime.Now,
                 Attempts = 1
-            });
+            };
+
+            await Logger.LogAsync($"{nameof(DhtTempHumiditySensor)}", $"Successful reading. {reading.Temperature}°C, {reading.Humidity}%, {reading.Attempts} attempt(s).");
+
+            return reading;
         }
     }
 }

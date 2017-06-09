@@ -15,6 +15,7 @@ using Template10.Common;
 using Windows.ApplicationModel.Activation;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
+using Windows.ApplicationModel;
 
 namespace QAirMonitor.UWP
 {
@@ -83,6 +84,17 @@ namespace QAirMonitor.UWP
 
             NavigationService.Navigate(typeof(MainPage));
             await Task.CompletedTask;
+        }
+
+        public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunchActivated)
+        {
+            SensorDataCollector.Stop();
+            return base.OnSuspendingAsync(s, e, prelaunchActivated);
+        }
+
+        public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
+        {
+            SensorDataCollector.Start();
         }
     }
 }

@@ -42,6 +42,9 @@ namespace QAirMonitor.UWP.Timers
 
         public void Stop()
         {
+            if (_timer == null)
+                return;
+
             _timer.Cancel();
             _timer = null;
         }

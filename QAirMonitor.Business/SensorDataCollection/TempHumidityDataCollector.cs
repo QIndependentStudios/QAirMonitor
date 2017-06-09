@@ -25,6 +25,10 @@ namespace QAirMonitor.Business.SensorDataCollection
             _sensor = sensor;
         }
 
+        public ReadingModel LastReading { get; private set; }
+
+        public int LastReadingAttempts { get; private set; }
+
         public async void Start()
         {
             await Logger.LogAsync($"{nameof(TempHumidityDataCollector)}", "Data collection started.");
@@ -53,6 +57,10 @@ namespace QAirMonitor.Business.SensorDataCollection
                 Humidity = readingResult.Humidity,
                 ReadingDateTime = readingResult.ReadingDateTime
             };
+
+            LastReading = reading;
+            LastReadingAttempts = readingResult.Attempts;
+
             await _writeRepo.WriteAsync(reading);
             OnReadingReceived(reading, readingResult.Attempts);
         }

@@ -1,0 +1,61 @@
+﻿<Page x:Class="QAirMonitor.UWP.Pages.LogPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:i="using:Microsoft.Xaml.Interactivity"
+      xmlns:m="using:QAirMonitor.Domain.Models"
+      xmlns:vm="using:QAirMonitor.UWP.ViewModels"
+      xmlns:behaviors="using:Template10.Behaviors"
+      mc:Ignorable="d">
+    <Page.DataContext>
+        <vm:LogPageViewModel x:Name="ViewModel" />
+    </Page.DataContext>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Refresh"
+                          Label="Refresh"
+                          Click="{x:Bind ViewModel.Refresh}" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <AppBarButton Icon="Back"
+                      Visibility="{x:Bind ViewModel.IsIot}">
+            <i:Interaction.Behaviors>
+                <behaviors:NavButtonBehavior Direction="Back"
+                                             Frame="{x:Bind Frame, Mode=OneWay}" />
+            </i:Interaction.Behaviors>
+        </AppBarButton>
+        <ListView ItemsSource="{x:Bind ViewModel.LogEntries, Mode=OneWay}"
+                  Grid.Row="1">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment"
+                            Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="m:AuditLogModel">
+                    <RelativePanel>
+                        <TextBlock x:Name="Date"
+                                   Text="{x:Bind EventDateTime}" />
+                        <TextBlock x:Name="Type"
+                                   Text="{x:Bind EventType}"
+                                   RelativePanel.AlignRightWithPanel="True" />
+                        <TextBlock x:Name="Message"
+                                   Text="{x:Bind Message}"
+                                   TextWrapping="Wrap"
+                                   RelativePanel.Below="Date"
+                                   RelativePanel.AlignLeftWithPanel="True"
+                                   RelativePanel.AlignRightWithPanel="True" />
+                    </RelativePanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>

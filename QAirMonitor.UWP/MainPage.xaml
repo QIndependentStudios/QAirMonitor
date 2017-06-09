@@ -34,7 +34,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="75" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <chart:RadCartesianChart Zoom="{x:Bind ViewModel.ZoomFactor, Mode=OneWay}"
@@ -101,6 +101,7 @@
                                RangeMin="{x:Bind ViewModel.RangeMin, Mode=TwoWay}"
                                RangeMax="{x:Bind ViewModel.RangeMax, Mode=TwoWay}"
                                VerticalAlignment="Center"
+                               Margin="20,0"
                                Grid.Row="1" />
         <RelativePanel Grid.Row="2">
             <TextBlock x:Name="StartupText"
@@ -140,10 +141,16 @@
                     Margin="10"
                     RelativePanel.Below="LastReadText"
                     RelativePanel.RightOf="SettingsPanel" />
+            <Button x:Name="LogButton"
+                    Content="View logs"
+                    Click="{x:Bind ViewModel.ViewLogs}"
+                    Margin="10"
+                    RelativePanel.Below="ResetButton"
+                    RelativePanel.RightOf="SettingsPanel" />
             <!--<Button Content="Add Sample Readings"
                     Click="{x:Bind ViewModel.AddSampleReadings}"
                     Margin="10"
-                    RelativePanel.RightOf="SettingsPanel"
+                    RelativePanel.RightOf="LogButton"
                     RelativePanel.Below="ResetButton" />-->
         </RelativePanel>
     </Grid>
