@@ -12,7 +12,7 @@
         <vm:LogPageViewModel x:Name="ViewModel" />
     </Page.DataContext>
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar DefaultLabelPosition="Right">
             <AppBarButton Icon="Refresh"
                           Label="Refresh"
                           Click="{x:Bind ViewModel.Refresh}" />
@@ -32,6 +32,7 @@
             </i:Interaction.Behaviors>
         </AppBarButton>
         <ListView ItemsSource="{x:Bind ViewModel.LogEntries, Mode=OneWay}"
+                  SelectionMode="None"
                   Grid.Row="1">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -41,7 +42,7 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="m:AuditLogModel">
-                    <RelativePanel>
+                    <RelativePanel Margin="0,0,0,10">
                         <TextBlock x:Name="Date"
                                    Text="{x:Bind EventDateTime}" />
                         <TextBlock x:Name="Type"
@@ -49,6 +50,7 @@
                                    RelativePanel.AlignRightWithPanel="True" />
                         <TextBlock x:Name="Message"
                                    Text="{x:Bind Message}"
+                                   Style="{ThemeResource CaptionTextBlockStyle}"
                                    TextWrapping="Wrap"
                                    RelativePanel.Below="Date"
                                    RelativePanel.AlignLeftWithPanel="True"

@@ -11,6 +11,10 @@
     <Page.Resources>
         <Color x:Key="TemperatureChartColor">#FFA500</Color>
         <Color x:Key="HumidityChartColor">#1E90FF</Color>
+        <SolidColorBrush x:Key="TemperatureChartBrush"
+                         Color="{ThemeResource TemperatureChartColor}" />
+        <SolidColorBrush x:Key="HumidityChartBrush"
+                         Color="{ThemeResource HumidityChartColor}" />
         <SolidColorBrush x:Key="TemperatureChartMidBrush"
                          Color="#96FFA500" />
         <SolidColorBrush x:Key="HumidityChartMidBrush"
@@ -39,6 +43,16 @@
     <Page.DataContext>
         <vm:MainPageViewModel x:Name="ViewModel" />
     </Page.DataContext>
+    <Page.BottomAppBar>
+        <CommandBar DefaultLabelPosition="Right">
+            <AppBarButton Icon="ShowResults"
+                          Label="Logs"
+                          Click="{x:Bind ViewModel.ViewLogs}" />
+            <AppBarButton Icon="Clear"
+                          Label="Reset view"
+                          Click="{x:Bind ViewModel.Reset}" />
+        </CommandBar>
+    </Page.BottomAppBar>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -90,7 +104,7 @@
                                       MajorStep="5"
                                       Title="Temperature"
                                       LabelFormat="{}{0:0}°C"
-                                      Foreground="{ThemeResource TemperatureChartColor}" />
+                                      Foreground="{ThemeResource TemperatureChartBrush}" />
                 </chart:LineSeries.VerticalAxis>
                 <chart:LineSeries.CategoryBinding>
                     <chart:PropertyNameDataPointBinding PropertyName="ReadingDateTime" />
@@ -121,7 +135,7 @@
                                       HorizontalLocation="Right"
                                       Title="Relative Humidity"
                                       LabelFormat="{}{0:0}%"
-                                      Foreground="{ThemeResource HumidityChartColor}" />
+                                      Foreground="{ThemeResource HumidityChartBrush}" />
                 </chart:LineSeries.VerticalAxis>
                 <chart:LineSeries.CategoryBinding>
                     <chart:PropertyNameDataPointBinding PropertyName="ReadingDateTime" />
@@ -144,7 +158,7 @@
                                RangeMin="{x:Bind ViewModel.RangeMin, Mode=TwoWay}"
                                RangeMax="{x:Bind ViewModel.RangeMax, Mode=TwoWay}"
                                VerticalAlignment="Center"
-                               Margin="20,0"
+                               Margin="40,0"
                                Grid.Row="1" />
         <RelativePanel Grid.Row="2">
             <TextBlock x:Name="StartupText"
@@ -178,23 +192,11 @@
                               Margin="10,0"
                               RelativePanel.Below="AutoScrollToggle" />
             </RelativePanel>
-            <Button x:Name="ResetButton"
-                    Content="Reset"
-                    Click="{x:Bind ViewModel.Reset}"
-                    Margin="10"
-                    RelativePanel.Below="LastReadText"
-                    RelativePanel.RightOf="SettingsPanel" />
-            <Button x:Name="LogButton"
-                    Content="View logs"
-                    Click="{x:Bind ViewModel.ViewLogs}"
-                    Margin="10"
-                    RelativePanel.Below="ResetButton"
-                    RelativePanel.RightOf="SettingsPanel" />
             <!--<Button Content="Add Sample Readings"
                     Click="{x:Bind ViewModel.AddSampleReadings}"
                     Margin="10"
-                    RelativePanel.RightOf="LogButton"
-                    RelativePanel.Below="ResetButton" />-->
+                    RelativePanel.Below="LastReadText"
+                    RelativePanel.RightOf="SettingsPanel" />-->
         </RelativePanel>
     </Grid>
 </Page>
