@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QAirMonitor.UWP", "QAirMonitor.UWP\QAirMonitor.UWP.csproj", "{206FDF12-F8F3-4C29-9DA0-0670EF34C4FB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{41ADB9B4-EDB7-40F4-9CED-6FE72E595E1C} = {41ADB9B4-EDB7-40F4-9CED-6FE72E595E1C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QAirMonitor.Domain", "QAirMonitor.Domain\QAirMonitor.Domain.csproj", "{4212488E-30EF-47E1-A752-0BFA9357154E}"
 EndProject
@@ -14,6 +17,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sensors.Dht", "Sensors.Dht\Sensors.Dht.vcxproj", "{2CD70A4F-9EED-4CDA-9E07-1A2BD33B4976}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QAirMonitor.Hardware.UWP", "QAirMonitor.Hardware.UWP\QAirMonitor.Hardware.UWP.csproj", "{41ADB9B4-EDB7-40F4-9CED-6FE72E595E1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QAirMonitor.Business", "QAirMonitor.Business\QAirMonitor.Business.csproj", "{6AAF25A8-FD36-4053-85FC-00EEB7877663}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +130,22 @@ Global
 		{41ADB9B4-EDB7-40F4-9CED-6FE72E595E1C}.Release|x64.Build.0 = Release|x64
 		{41ADB9B4-EDB7-40F4-9CED-6FE72E595E1C}.Release|x86.ActiveCfg = Release|x86
 		{41ADB9B4-EDB7-40F4-9CED-6FE72E595E1C}.Release|x86.Build.0 = Release|x86
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Debug|ARM.Build.0 = Debug|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Debug|x64.Build.0 = Debug|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Debug|x86.Build.0 = Debug|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Release|ARM.ActiveCfg = Release|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Release|ARM.Build.0 = Release|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Release|x64.ActiveCfg = Release|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Release|x64.Build.0 = Release|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Release|x86.ActiveCfg = Release|Any CPU
+		{6AAF25A8-FD36-4053-85FC-00EEB7877663}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

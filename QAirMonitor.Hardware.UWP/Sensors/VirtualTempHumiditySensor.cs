@@ -1,11 +1,11 @@
 ﻿using QAirMonitor.Abstract.Sensors;
-using QAirMonitor.Domain.Models;
+using QAirMonitor.Domain.Sensors;
 using System;
 using System.Threading.Tasks;
 
 namespace QAirMonitor.Hardware.UWP.Sensors
 {
-    public class VirtualTempHumiditySensor : ITempHumiditySensor<ReadingModel>
+    public class VirtualTempHumiditySensor : ITempHumiditySensor<TempHumidityReadingResult>
     {
         private double _minTempLimit = 2;
         private double _maxTempLimit = 5;
@@ -29,13 +29,14 @@ namespace QAirMonitor.Hardware.UWP.Sensors
             _maxHumidityLimit = maxHumidityLimit;
         }
 
-        public Task<ReadingModel> GetReadingAsync()
+        public Task<TempHumidityReadingResult> GetReadingAsync()
         {
-            return Task.FromResult(new ReadingModel
+            return Task.FromResult(new TempHumidityReadingResult
             {
                 Temperature = _rand.Next((int)(_minTempLimit * 100), (int)(_maxTempLimit * 100)) / 100.0,
                 Humidity = _rand.Next((int)(_minHumidityLimit * 100), (int)(_maxHumidityLimit * 100)) / 100.0,
-                ReadingDateTime = DateTime.Now
+                ReadingDateTime = DateTime.Now,
+                Attempts = 1
             });
         }
     }

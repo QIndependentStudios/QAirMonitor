@@ -1,5 +1,5 @@
 ﻿using QAirMonitor.Abstract.Sensors;
-using QAirMonitor.Domain.Models;
+using QAirMonitor.Domain.Sensors;
 using Sensors.Dht;
 using System;
 using System.Threading.Tasks;
@@ -7,7 +7,7 @@ using Windows.Devices.Gpio;
 
 namespace QAirMonitor.Hardware.UWP.Sensors
 {
-    public class DhtTempHumiditySensor : ITempHumiditySensor<ReadingModel>
+    public class DhtTempHumiditySensor : ITempHumiditySensor<TempHumidityReadingResult>
     {
         private GpioPin _sensorDataPin;
         private IDht _dhtSensor;
@@ -18,9 +18,9 @@ namespace QAirMonitor.Hardware.UWP.Sensors
             _dhtSensor = new Dht22(_sensorDataPin, GpioPinDriveMode.Input);
         }
 
-        public async Task<ReadingModel> GetReadingAsync()
+        public async Task<TempHumidityReadingResult> GetReadingAsync()
         {
-            var reading = new ReadingModel();
+            var reading = new TempHumidityReadingResult();
             try
             {
                 DhtReading hdtReading = new DhtReading();
@@ -32,6 +32,7 @@ namespace QAirMonitor.Hardware.UWP.Sensors
                     reading.Temperature = hdtReading.Temperature;
                     reading.Humidity = hdtReading.Humidity;
                     reading.ReadingDateTime = DateTime.Now;
+                    reading.Attempts = hdtReading.RetryCount + 1;
 
                     return reading;
                 }
@@ -40,7 +41,6 @@ namespace QAirMonitor.Hardware.UWP.Sensors
             }
             catch (Exception)
             {
-                // TODO: Log failure.
                 return null;
             }
         }

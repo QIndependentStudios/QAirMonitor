@@ -103,8 +103,16 @@
                                VerticalAlignment="Center"
                                Grid.Row="1" />
         <RelativePanel Grid.Row="2">
+            <TextBlock x:Name="StartupText"
+                       Text="{x:Bind ViewModel.Startup, Mode=OneWay}"
+                       Margin="10" />
+            <TextBlock x:Name="LastReadText"
+                       Text="{x:Bind ViewModel.LastReading, Mode=OneWay}"
+                       Margin="10"
+                       RelativePanel.RightOf="StartupText" />
             <RelativePanel x:Name="ReadoutPanel"
-                           Margin="10">
+                           Margin="10"
+                           RelativePanel.Below="LastReadText">
                 <toolkit:HeaderedTextBlock x:Name="LatestTemperature"
                                            Header="Temperature"
                                            Text="{x:Bind ViewModel.Temperature, Mode=OneWay}" />
@@ -112,14 +120,10 @@
                                            Header="Humidity"
                                            Text="{x:Bind ViewModel.Humidity, Mode=OneWay}"
                                            RelativePanel.Below="LatestTemperature" />
-                <TextBlock x:Name="StartupText"
-                           Text="{x:Bind ViewModel.Startup, Mode=OneWay}"
-                           RelativePanel.Below="LatestHumidity" />
-                <TextBlock Text="{x:Bind ViewModel.LastReading, Mode=OneWay}"
-                           RelativePanel.Below="StartupText" />
             </RelativePanel>
             <RelativePanel x:Name="SettingsPanel"
                            Margin="10"
+                           RelativePanel.Below="LastReadText"
                            RelativePanel.RightOf="ReadoutPanel">
                 <ToggleSwitch x:Name="AutoScrollToggle"
                               Header="Auto-scroll to new reading"
@@ -134,6 +138,7 @@
                     Content="Reset"
                     Click="{x:Bind ViewModel.Reset}"
                     Margin="10"
+                    RelativePanel.Below="LastReadText"
                     RelativePanel.RightOf="SettingsPanel" />
             <!--<Button Content="Add Sample Readings"
                     Click="{x:Bind ViewModel.AddSampleReadings}"
