@@ -8,15 +8,15 @@ namespace QAirMonitor.Hardware.UWP.Sensors
 {
     public class VirtualTempHumiditySensor : ITempHumiditySensor<TempHumidityReadingResult>
     {
-        private double _minTempLimit = 2;
-        private double _maxTempLimit = 5;
-        private double _minHumidityLimit = 40;
-        private double _maxHumidityLimit = 65;
+        private double _minTempLimit;
+        private double _maxTempLimit;
+        private double _minHumidityLimit;
+        private double _maxHumidityLimit;
 
         private readonly Random _rand = new Random();
 
         public VirtualTempHumiditySensor()
-            : this(2, 5, 40, 65)
+            : this(2, 5, 65, 75)
         { }
 
         public VirtualTempHumiditySensor(double minTempLimit,
