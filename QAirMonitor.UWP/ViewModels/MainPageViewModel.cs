@@ -26,9 +26,6 @@ namespace QAirMonitor.UWP.ViewModels
         #region Fields
         private readonly IReadAllRepository<ReadingModel> _readAllRepo;
         private readonly IWriteRepository<ReadingModel> _writeRepo;
-        private readonly ISensorDataCollector<ReadingModel> _sensorDataCollector;
-
-        private readonly TimeSpan DataCollectionInterval = TimeSpan.FromMinutes(5);
 
         private ObservableCollection<ReadingModel> _readings;
         private double _rangeSize;
@@ -51,14 +48,8 @@ namespace QAirMonitor.UWP.ViewModels
             _readAllRepo = repo;
             _writeRepo = repo;
 
-            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.IoT")
-                _sensorDataCollector = new TempHumidityDataCollector(new SnappedIntervalTimer(DataCollectionInterval),
-                    new DhtTempHumiditySensor());
-            else
-                _sensorDataCollector = new TempHumidityDataCollector(new SnappedIntervalTimer(DataCollectionInterval),
-                    new VirtualTempHumiditySensor());
-
-            _sensorDataCollector.ReadingReceived += SensorDataCollector_ReadingReceived;
+            if (App.SensorDataCollector != null)
+                App.SensorDataCollector.ReadingReceived += SensorDataCollector_ReadingReceived;
         }
         #endregion
 
@@ -210,42 +201,22 @@ namespace QAirMonitor.UWP.ViewModels
             SetDefaultSelectedRange();
         }
 
-        private async Task StartDataCollection()
-        {
-            Startup = $"Started: {DateTime.Now:M/d/yyyy h:mm:ss tt}";
-
-            if (Readings.Count == 0)
-            {
-                var reading = new ReadingModel
-                {
-                    Temperature = 0,
-                    Humidity = 0,
-                    ReadingDateTime = DateTime.Now.Floor(DataCollectionInterval)
-                };
-
-                await _writeRepo.WriteAsync(reading);
-                Readings.Insert(0, reading);
-            }
-
-            _sensorDataCollector.Start();
-        }
-
-        private void StopDataCollection()
-        {
-            _sensorDataCollector.Stop();
-        }
-
         public async override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            Startup = $"Started: {App.Startup:M/d/yyyy h:mm:ss tt}";
             await LoadReadings();
-            await StartDataCollection();
+
+            if (App.SensorDataCollector != null)
+                App.SensorDataCollector.ReadingReceived += SensorDataCollector_ReadingReceived;
 
             await base.OnNavigatedToAsync(parameter, mode, state);
         }
 
         public override Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
-            StopDataCollection();
+            if (App.SensorDataCollector != null)
+                App.SensorDataCollector.ReadingReceived -= SensorDataCollector_ReadingReceived;
+
             return base.OnNavigatingFromAsync(args);
         }
         #endregion
@@ -282,9 +253,9 @@ namespace QAirMonitor.UWP.ViewModels
         {
             var rand = new Random();
 
-            var lastTime = DateTime.Now.Floor(DataCollectionInterval);
+            var lastTime = DateTime.Now.Floor(App.DataCollectionInterval);
 
-            var totalEntries = (int)((24 * 60) / DataCollectionInterval.TotalMinutes);
+            var totalEntries = (int)((24 * 60) / App.DataCollectionInterval.TotalMinutes);
             for (int i = 0; i < totalEntries; i++)
             {
                 var reading = new ReadingModel
