@@ -1,12 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QAirMonitor.Business.Logging;
 using QAirMonitor.Persist.Context;
 using System.Threading.Tasks;
 using Template10.Common;
-using Template10.Controls;
-using Template10.Services.NavigationService;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
-using static Template10.Common.BootStrapper;
 
 namespace QAirMonitor.UWP
 {
@@ -21,27 +19,14 @@ namespace QAirMonitor.UWP
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+            UnhandledException += App_UnhandledException;
+            InitializeComponent();
         }
 
-        //public override async Task OnInitializeAsync(IActivatedEventArgs args)
-        //{
-        //    if (Window.Current.Content as ModalDialog == null)
-        //    {
-        //        // create a new frame 
-        //        var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
-
-        //        // create modal root
-        //        //Window.Current.Content = new ModalDialog
-        //        //{
-        //        //    DisableBackButtonWhenModal = true,
-        //        //    Content = new Frame,
-        //        //    //ModalContent = new Views.Busy()
-        //        //};
-        //    }
-        //    Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(320, 480));
-        //    await Task.CompletedTask;
-        //}
+        private async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            await Logger.LogExceptionAsync("App", e.Exception);
+        }
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {

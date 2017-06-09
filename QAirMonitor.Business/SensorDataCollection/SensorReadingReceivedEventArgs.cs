@@ -4,9 +4,9 @@ using System;
 
 namespace QAirMonitor.Business.SensorDataCollection
 {
-    public class SensorReadingReceived : EventArgs, ISensorReadingReceivedEventArgs<ReadingModel>
+    public class SensorReadingReceivedEventArgs : EventArgs, ISensorReadingReceivedEventArgs<ReadingModel>
     {
-        public SensorReadingReceived(ReadingModel reading, int attempts)
+        public SensorReadingReceivedEventArgs(ReadingModel reading, int attempts)
         {
             NewReading = reading;
             Attempts = attempts;

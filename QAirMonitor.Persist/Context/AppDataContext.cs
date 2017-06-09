@@ -7,6 +7,7 @@ namespace QAirMonitor.Persist.Context
     public class AppDataContext : DbContext
     {
         public DbSet<ReadingModel> Readings { get; set; }
+        public DbSet<AuditLogModel> AuditLogEntries { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -19,6 +20,14 @@ namespace QAirMonitor.Persist.Context
             modelBuilder.Entity<ReadingModel>()
                 .ToTable("Readings")
                 .HasKey(r => r.ReadingID);
+
+            modelBuilder.Entity<AuditLogModel>()
+                .ToTable("AuditLog")
+                .HasKey(l => l.AuditLogID);
+
+            modelBuilder.Entity<AuditLogModel>()
+                .Property(l => l.Message)
+                .HasMaxLength(255);
         }
     }
 }

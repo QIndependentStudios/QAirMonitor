@@ -1,6 +1,7 @@
 ﻿using QAirMonitor.Abstract.Business;
 using QAirMonitor.Abstract.Persist;
 using QAirMonitor.Abstract.Sensors;
+using QAirMonitor.Business.Logging;
 using QAirMonitor.Domain.Models;
 using QAirMonitor.Domain.Sensors;
 using QAirMonitor.Persist.Repositories;
@@ -24,13 +25,15 @@ namespace QAirMonitor.Business.SensorDataCollection
             _sensor = sensor;
         }
 
-        public void Start()
+        public async void Start()
         {
+            await Logger.LogAsync($"{nameof(TempHumidityDataCollector)}", "Data collection started.");
             _timer.Start();
         }
 
-        public void Stop()
+        public async void Stop()
         {
+            await Logger.LogAsync($"{nameof(TempHumidityDataCollector)}", "Data collection stopped.");
             _timer.Stop();
         }
 
@@ -56,7 +59,7 @@ namespace QAirMonitor.Business.SensorDataCollection
 
         protected void OnReadingReceived(ReadingModel reading, int attempts)
         {
-            ReadingReceived?.Invoke(this, new SensorReadingReceived(reading, attempts));
+            ReadingReceived?.Invoke(this, new SensorReadingReceivedEventArgs(reading, attempts));
         }
 
         public event EventHandler<ISensorReadingReceivedEventArgs<ReadingModel>> ReadingReceived;

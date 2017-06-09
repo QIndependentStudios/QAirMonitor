@@ -1,4 +1,6 @@
 ﻿using QAirMonitor.Abstract.Sensors;
+using QAirMonitor.Business.Logging;
+using QAirMonitor.Domain.Enums;
 using QAirMonitor.Domain.Sensors;
 using Sensors.Dht;
 using System;
@@ -34,13 +36,19 @@ namespace QAirMonitor.Hardware.UWP.Sensors
                     reading.ReadingDateTime = DateTime.Now;
                     reading.Attempts = hdtReading.RetryCount + 1;
 
+                    await Logger.LogAsync($"{nameof(DhtTempHumiditySensor)}", $"Successful reading. {reading.Temperature}°C, {reading.Humidity}%, {reading.Attempts} attempt(s).");
+
                     return reading;
                 }
                 else
+                {
+                    await Logger.LogAsync($"{nameof(DhtTempHumiditySensor)}", $"Failed reading. {reading.Attempts} attempt(s).", AuditLogEventType.Warning);
                     return null;
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                await Logger.LogExceptionAsync(nameof(DhtTempHumiditySensor), e);
                 return null;
             }
         }

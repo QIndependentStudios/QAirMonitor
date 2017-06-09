@@ -121,6 +121,10 @@
       <Project>{bfa6c60f-4dd1-45e6-936b-6dbe55f14cf1}</Project>
       <Name>QAirMonitor.Abstract</Name>
     </ProjectReference>
+    <ProjectReference Include="..\QAirMonitor.Business\QAirMonitor.Business.csproj">
+      <Project>{6AAF25A8-FD36-4053-85FC-00EEB7877663}</Project>
+      <Name>QAirMonitor.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QAirMonitor.Domain\QAirMonitor.Domain.csproj">
       <Project>{4212488e-30ef-47e1-a752-0bfa9357154e}</Project>
       <Name>QAirMonitor.Domain</Name>

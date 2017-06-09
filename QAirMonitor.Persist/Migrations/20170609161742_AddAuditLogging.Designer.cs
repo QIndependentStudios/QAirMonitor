@@ -9,9 +9,10 @@ using QAirMonitor.Domain.Enums;
 namespace QAirMonitor.Persist.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20170609161742_AddAuditLogging")]
+    partial class AddAuditLogging
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2");
