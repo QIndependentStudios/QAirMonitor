@@ -52,8 +52,8 @@
             </chart:RadCartesianChart.Palette>
             <chart:LineSeries ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
                 <chart:LineSeries.HorizontalAxis>
-                    <chart:DateTimeContinuousAxis MajorStep="1"
-                                                  MajorStepUnit="Hour"
+                    <chart:DateTimeContinuousAxis MajorStep="10"
+                                                  MajorStepUnit="Minute"
                                                   LabelInterval="2"
                                                   LabelFitMode="Rotate"
                                                   LabelFormat="{}{0:h:mm tt}" />
@@ -103,17 +103,43 @@
                                VerticalAlignment="Center"
                                Grid.Row="1" />
         <RelativePanel Grid.Row="2">
-            <ToggleSwitch x:Name="AutoScrollToggle"
-                          Header="Auto-scroll to new reading"
-                          IsOn="{x:Bind ViewModel.AutoScroll, Mode=TwoWay}"
-                          Margin="10" />
-            <ToggleSwitch Header="Maintain scope during auto-scroll"
-                          IsOn="{x:Bind ViewModel.MaintainScope, Mode=TwoWay}"
-                          Margin="10"
-                          RelativePanel.RightOf="AutoScrollToggle" />
+            <RelativePanel x:Name="ReadoutPanel"
+                           Margin="10">
+                <toolkit:HeaderedTextBlock x:Name="LatestTemperature"
+                                           Header="Temperature"
+                                           Text="{x:Bind ViewModel.Temperature, Mode=OneWay}" />
+                <toolkit:HeaderedTextBlock x:Name="LatestHumidity"
+                                           Header="Humidity"
+                                           Text="{x:Bind ViewModel.Humidity, Mode=OneWay}"
+                                           RelativePanel.Below="LatestTemperature" />
+                <TextBlock x:Name="StartupText"
+                           Text="{x:Bind ViewModel.Startup, Mode=OneWay}"
+                           RelativePanel.Below="LatestHumidity" />
+                <TextBlock Text="{x:Bind ViewModel.LastReading, Mode=OneWay}"
+                           RelativePanel.Below="StartupText" />
+            </RelativePanel>
+            <RelativePanel x:Name="SettingsPanel"
+                           Margin="10"
+                           RelativePanel.RightOf="ReadoutPanel">
+                <ToggleSwitch x:Name="AutoScrollToggle"
+                              Header="Auto-scroll to new reading"
+                              IsOn="{x:Bind ViewModel.AutoScroll, Mode=TwoWay}"
+                              Margin="10,0" />
+                <ToggleSwitch Header="Maintain scope during auto-scroll"
+                              IsOn="{x:Bind ViewModel.MaintainScope, Mode=TwoWay}"
+                              Margin="10,0"
+                              RelativePanel.Below="AutoScrollToggle" />
+            </RelativePanel>
+            <Button x:Name="ResetButton"
+                    Content="Reset"
+                    Click="{x:Bind ViewModel.Reset}"
+                    Margin="10"
+                    RelativePanel.RightOf="SettingsPanel" />
             <!--<Button Content="Add Sample Readings"
                     Click="{x:Bind ViewModel.AddSampleReadings}"
-                    RelativePanel.RightOf="StartButton" />-->
+                    Margin="10"
+                    RelativePanel.RightOf="SettingsPanel"
+                    RelativePanel.Below="ResetButton" />-->
         </RelativePanel>
     </Grid>
 </Page>

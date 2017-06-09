@@ -1,7 +1,8 @@
-﻿using QAirMonitor.Abstract.Business;
-using QAirMonitor.Abstract.Persist;
+﻿using QAirMonitor.Abstract.Persist;
+using QAirMonitor.Abstract.Sensors;
 using QAirMonitor.Domain.Models;
 using QAirMonitor.Persist.Repositories;
+using QAirMonitor.UWP.Hardware.Sensors;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +12,7 @@ using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.System.Profile;
 using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Navigation;
@@ -27,6 +29,7 @@ namespace QAirMonitor.UWP.ViewModels
         private readonly TimeSpan DataCollectionInterval = TimeSpan.FromMinutes(5);
 
         private ThreadPoolTimer _timer;
+        private int _errorCount;
 
         private ObservableCollection<ReadingModel> _readings;
         private double _rangeSize;
@@ -36,6 +39,10 @@ namespace QAirMonitor.UWP.ViewModels
         private Point _scrollOffset;
         private bool _autoScroll = true;
         private bool _maintainScope;
+        private string _temperature = "n/a";
+        private string _humidity = "n/a";
+        private string _startup;
+        private string _lastReading;
         #endregion
 
         #region Constructors
@@ -45,7 +52,10 @@ namespace QAirMonitor.UWP.ViewModels
             _readAllRepo = repo;
             _writeRepo = repo;
 
-            _sensor = new TestTempHumiditySensor();
+            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.IoT")
+                _sensor = new DhtTempHumiditySensor();
+            else
+                _sensor = new VirtualTempHumiditySensor();
         }
         #endregion
 
@@ -104,6 +114,30 @@ namespace QAirMonitor.UWP.ViewModels
         {
             get { return _maintainScope; }
             set { Set(ref _maintainScope, value); }
+        }
+
+        public string Temperature
+        {
+            get { return _temperature; }
+            set { Set(ref _temperature, value); }
+        }
+
+        public string Humidity
+        {
+            get { return _humidity; }
+            set { Set(ref _humidity, value); }
+        }
+
+        public string Startup
+        {
+            get { return _startup; }
+            set { Set(ref _startup, value); }
+        }
+
+        public string LastReading
+        {
+            get { return _lastReading; }
+            set { Set(ref _lastReading, value); }
         }
         #endregion
 
@@ -193,6 +227,8 @@ namespace QAirMonitor.UWP.ViewModels
 
         private async Task StartDataCollection()
         {
+            Startup = $"Started: {DateTime.Now:M/d/yyyy h:mm:ss tt}";
+
             if (Readings.Count == 0)
             {
                 var reading = new ReadingModel
@@ -224,7 +260,20 @@ namespace QAirMonitor.UWP.ViewModels
 
         private async void CollectSensorData(ThreadPoolTimer timer = null)
         {
-            var reading = _sensor.GetReading();
+            var reading = await _sensor.GetReadingAsync();
+
+            if (reading == null)
+            {
+                _errorCount++;
+                Temperature = "Error";
+                Humidity = "Error";
+                LastReading = $"Last reading: {DateTime.Now:M/d/yyyy h:mm:ss tt}, {_errorCount} error(s)";
+                return;
+            }
+
+            Temperature = $"{reading.Temperature:0.00}°C";
+            Humidity = $"{reading.Humidity:0.00}%";
+            LastReading = $"Last reading: {reading.ReadingDateTime:M/d/yyyy h:mm:ss tt}, {_errorCount} error(s)";
 
             await _writeRepo.WriteAsync(reading);
 
@@ -239,6 +288,7 @@ namespace QAirMonitor.UWP.ViewModels
         {
             await LoadReadings();
             await StartDataCollection();
+
             await base.OnNavigatedToAsync(parameter, mode, state);
         }
 
@@ -246,6 +296,14 @@ namespace QAirMonitor.UWP.ViewModels
         {
             StopDataCollection();
             return base.OnNavigatingFromAsync(args);
+        }
+        #endregion
+
+        #region Event Handlers
+        public async void Reset()
+        {
+            await LoadReadings();
+            AutoScroll = true;
         }
 
         public async Task AddSampleReadings()
@@ -271,20 +329,5 @@ namespace QAirMonitor.UWP.ViewModels
             }
         }
         #endregion
-    }
-
-    public class TestTempHumiditySensor : ITempHumiditySensor<ReadingModel>
-    {
-        private readonly Random _rand = new Random();
-
-        public ReadingModel GetReading()
-        {
-            return new ReadingModel
-            {
-                Temperature = _rand.Next(-200, 500) / 100.0,
-                Humidity = _rand.Next(5000, 8500) / 100.0,
-                ReadingDateTime = DateTime.Now
-            };
-        }
     }
 }
