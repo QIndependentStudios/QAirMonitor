@@ -29,27 +29,27 @@ namespace QAirMonitor.Hardware.UWP.Sensors
 
                 hdtReading = await _dhtSensor.GetReadingAsync(250).AsTask();
 
+                reading.Temperature = hdtReading.Temperature;
+                reading.Humidity = hdtReading.Humidity;
+                reading.ReadingDateTime = DateTime.Now;
+                reading.Attempts = hdtReading.RetryCount + 1;
+                reading.IsSuccessful = hdtReading.IsValid;
+
                 if (hdtReading.IsValid)
                 {
-                    reading.Temperature = hdtReading.Temperature;
-                    reading.Humidity = hdtReading.Humidity;
-                    reading.ReadingDateTime = DateTime.Now;
-                    reading.Attempts = hdtReading.RetryCount + 1;
-
                     await Logger.LogAsync($"{nameof(DhtTempHumiditySensor)}", $"Successful reading. {reading.Temperature}°C, {reading.Humidity}%, {reading.Attempts} attempt(s).");
-
-                    return reading;
                 }
                 else
                 {
                     await Logger.LogAsync($"{nameof(DhtTempHumiditySensor)}", $"Failed reading. {reading.Attempts} attempt(s).", AuditLogEventType.Warning);
-                    return null;
                 }
+
+                return reading;
             }
             catch (Exception e)
             {
                 await Logger.LogExceptionAsync(nameof(DhtTempHumiditySensor), e);
-                return null;
+                return reading;
             }
         }
     }

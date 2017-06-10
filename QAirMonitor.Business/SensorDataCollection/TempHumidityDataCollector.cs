@@ -45,7 +45,7 @@ namespace QAirMonitor.Business.SensorDataCollection
         {
             var readingResult = await _sensor.GetReadingAsync();
 
-            if (readingResult == null)
+            if (!readingResult.IsSuccessful)
             {
                 OnReadingReceived(null, readingResult.Attempts);
                 return;

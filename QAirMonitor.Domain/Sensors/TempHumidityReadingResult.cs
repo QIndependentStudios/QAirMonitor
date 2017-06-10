@@ -8,5 +8,6 @@ namespace QAirMonitor.Domain.Sensors
         public double Humidity { get; set; }
         public DateTime ReadingDateTime { get; set; }
         public int Attempts { get; set; }
+        public bool IsSuccessful { get; set; }
     }
 }
