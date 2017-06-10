@@ -48,111 +48,148 @@
             <AppBarButton Icon="ShowResults"
                           Label="Logs"
                           Click="{x:Bind ViewModel.ViewLogs}" />
+            <AppBarSeparator />
             <AppBarButton Icon="Clear"
                           Label="Reset view"
                           Click="{x:Bind ViewModel.Reset}" />
+            <AppBarToggleButton Icon="Next"
+                                Label="Auto scroll"
+                                IsChecked="{x:Bind ViewModel.AutoScroll, Mode=TwoWay}" />
+            <AppBarToggleButton Icon="Trim"
+                                Label="Maintain scope"
+                                IsChecked="{x:Bind ViewModel.MaintainScope, Mode=TwoWay}" />
         </CommandBar>
     </Page.BottomAppBar>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="50" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <chart:RadCartesianChart Zoom="{x:Bind ViewModel.ZoomFactor, Mode=OneWay}"
-                                 ScrollOffset="{x:Bind ViewModel.ScrollOffset, Mode=OneWay}"
-                                 Margin="10">
-            <chart:RadCartesianChart.Behaviors>
-                <chart:ChartTrackBallBehavior />
-            </chart:RadCartesianChart.Behaviors>
-            <chart:RadCartesianChart.Palette>
-                <chart:ChartPalette>
-                    <chart:ChartPalette.FillEntries>
-                        <chart:PaletteEntryCollection>
-                            <SolidColorBrush Color="{ThemeResource TemperatureChartColor}" />
-                            <SolidColorBrush Color="{ThemeResource HumidityChartColor}" />
-                        </chart:PaletteEntryCollection>
-                    </chart:ChartPalette.FillEntries>
-                </chart:ChartPalette>
-            </chart:RadCartesianChart.Palette>
-            <chart:RadCartesianChart.Annotations>
-                <chart:CartesianPlotBandAnnotation Axis="{x:Bind TempVerticalAxis}"
-                                                   From="1"
-                                                   To="4"
-                                                   Stroke="{ThemeResource TemperatureChartMidBrush}"
-                                                   StrokeThickness="1"
-                                                   Fill="{ThemeResource TemperatureChartLowBrush}" />
-                <chart:CartesianPlotBandAnnotation Axis="{x:Bind HumidityVerticalAxis}"
-                                                   From="70"
-                                                   To="85"
-                                                   Stroke="{ThemeResource HumidityChartMidBrush}"
-                                                   StrokeThickness="1"
-                                                   Fill="{ThemeResource HumidityChartLowBrush}" />
-            </chart:RadCartesianChart.Annotations>
-            <chart:LineSeries ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
-                <chart:LineSeries.HorizontalAxis>
-                    <chart:DateTimeContinuousAxis MajorStep="10"
-                                                  MajorStepUnit="Minute"
-                                                  LabelInterval="2"
-                                                  LabelFitMode="Rotate"
-                                                  LabelFormat="{}{0:h:mm tt}" />
-                </chart:LineSeries.HorizontalAxis>
-                <chart:LineSeries.VerticalAxis>
-                    <chart:LinearAxis x:Name="TempVerticalAxis"
-                                      Minimum="-5"
-                                      Maximum="25"
-                                      MajorStep="5"
-                                      Title="Temperature"
-                                      LabelFormat="{}{0:0}°C"
-                                      Foreground="{ThemeResource TemperatureChartBrush}" />
-                </chart:LineSeries.VerticalAxis>
-                <chart:LineSeries.CategoryBinding>
-                    <chart:PropertyNameDataPointBinding PropertyName="ReadingDateTime" />
-                </chart:LineSeries.CategoryBinding>
-                <chart:LineSeries.ValueBinding>
-                    <chart:PropertyNameDataPointBinding PropertyName="Temperature" />
-                </chart:LineSeries.ValueBinding>
-                <chart:ChartTrackBallBehavior.TrackInfoTemplate>
-                    <DataTemplate>
-                        <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
-                            <TextBlock Text="{Binding DataPoint.DataItem.Temperature, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}°C'}"
-                                       Margin="5" />
-                        </Border>
-                    </DataTemplate>
-                </chart:ChartTrackBallBehavior.TrackInfoTemplate>
-            </chart:LineSeries>
-            <chart:LineSeries ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
-                <chart:LineSeries.HorizontalAxis>
-                    <chart:DateTimeContinuousAxis MajorStep="1"
-                                                  MajorStepUnit="Day"
-                                                  VerticalLocation="Top"
-                                                  LabelFormat="{}{0:M/d/yy}" />
-                </chart:LineSeries.HorizontalAxis>
-                <chart:LineSeries.VerticalAxis>
-                    <chart:LinearAxis x:Name="HumidityVerticalAxis"
-                                      Minimum="0"
-                                      Maximum="100"
-                                      HorizontalLocation="Right"
-                                      Title="Relative Humidity"
-                                      LabelFormat="{}{0:0}%"
-                                      Foreground="{ThemeResource HumidityChartBrush}" />
-                </chart:LineSeries.VerticalAxis>
-                <chart:LineSeries.CategoryBinding>
-                    <chart:PropertyNameDataPointBinding PropertyName="ReadingDateTime" />
-                </chart:LineSeries.CategoryBinding>
-                <chart:LineSeries.ValueBinding>
-                    <chart:PropertyNameDataPointBinding PropertyName="Humidity" />
-                </chart:LineSeries.ValueBinding>
-                <chart:ChartTrackBallBehavior.TrackInfoTemplate>
-                    <DataTemplate>
-                        <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
-                            <TextBlock Text="{Binding DataPoint.DataItem.Humidity, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}%'}"
-                                       Margin="5" />
-                        </Border>
-                    </DataTemplate>
-                </chart:ChartTrackBallBehavior.TrackInfoTemplate>
-            </chart:LineSeries>
-        </chart:RadCartesianChart>
+        <Pivot>
+            <PivotItem Header="Chart">
+                <chart:RadCartesianChart Zoom="{x:Bind ViewModel.ZoomFactor, Mode=OneWay}"
+                                         ScrollOffset="{x:Bind ViewModel.ScrollOffset, Mode=OneWay}"
+                                         Margin="10,0">
+                    <chart:RadCartesianChart.Behaviors>
+                        <chart:ChartTrackBallBehavior />
+                    </chart:RadCartesianChart.Behaviors>
+                    <chart:RadCartesianChart.Palette>
+                        <chart:ChartPalette>
+                            <chart:ChartPalette.FillEntries>
+                                <chart:PaletteEntryCollection>
+                                    <SolidColorBrush Color="{ThemeResource TemperatureChartColor}" />
+                                    <SolidColorBrush Color="{ThemeResource HumidityChartColor}" />
+                                </chart:PaletteEntryCollection>
+                            </chart:ChartPalette.FillEntries>
+                        </chart:ChartPalette>
+                    </chart:RadCartesianChart.Palette>
+                    <chart:RadCartesianChart.Annotations>
+                        <chart:CartesianPlotBandAnnotation Axis="{x:Bind TempVerticalAxis}"
+                                                           From="1"
+                                                           To="4"
+                                                           Stroke="{ThemeResource TemperatureChartMidBrush}"
+                                                           StrokeThickness="1"
+                                                           Fill="{ThemeResource TemperatureChartLowBrush}" />
+                        <chart:CartesianPlotBandAnnotation Axis="{x:Bind HumidityVerticalAxis}"
+                                                           From="70"
+                                                           To="85"
+                                                           Stroke="{ThemeResource HumidityChartMidBrush}"
+                                                           StrokeThickness="1"
+                                                           Fill="{ThemeResource HumidityChartLowBrush}" />
+                    </chart:RadCartesianChart.Annotations>
+                    <chart:LineSeries ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
+                        <chart:LineSeries.HorizontalAxis>
+                            <chart:DateTimeContinuousAxis MajorStep="10"
+                                                          MajorStepUnit="Minute"
+                                                          LabelInterval="2"
+                                                          LabelFitMode="Rotate"
+                                                          LabelFormat="{}{0:h:mm tt}" />
+                        </chart:LineSeries.HorizontalAxis>
+                        <chart:LineSeries.VerticalAxis>
+                            <chart:LinearAxis x:Name="TempVerticalAxis"
+                                              Minimum="-5"
+                                              Maximum="25"
+                                              MajorStep="5"
+                                              Title="Temperature"
+                                              LabelFormat="{}{0:0}°C"
+                                              Foreground="{ThemeResource TemperatureChartBrush}" />
+                        </chart:LineSeries.VerticalAxis>
+                        <chart:LineSeries.CategoryBinding>
+                            <chart:PropertyNameDataPointBinding PropertyName="ReadingDateTime" />
+                        </chart:LineSeries.CategoryBinding>
+                        <chart:LineSeries.ValueBinding>
+                            <chart:PropertyNameDataPointBinding PropertyName="Temperature" />
+                        </chart:LineSeries.ValueBinding>
+                        <chart:ChartTrackBallBehavior.TrackInfoTemplate>
+                            <DataTemplate>
+                                <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
+                                    <TextBlock Text="{Binding DataPoint.DataItem.Temperature, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}°C'}"
+                                               Margin="5" />
+                                </Border>
+                            </DataTemplate>
+                        </chart:ChartTrackBallBehavior.TrackInfoTemplate>
+                    </chart:LineSeries>
+                    <chart:LineSeries ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
+                        <chart:LineSeries.HorizontalAxis>
+                            <chart:DateTimeContinuousAxis MajorStep="1"
+                                                          MajorStepUnit="Day"
+                                                          VerticalLocation="Top"
+                                                          LabelFormat="{}{0:M/d/yy}" />
+                        </chart:LineSeries.HorizontalAxis>
+                        <chart:LineSeries.VerticalAxis>
+                            <chart:LinearAxis x:Name="HumidityVerticalAxis"
+                                              Minimum="0"
+                                              Maximum="100"
+                                              HorizontalLocation="Right"
+                                              Title="Relative Humidity"
+                                              LabelFormat="{}{0:0}%"
+                                              Foreground="{ThemeResource HumidityChartBrush}" />
+                        </chart:LineSeries.VerticalAxis>
+                        <chart:LineSeries.CategoryBinding>
+                            <chart:PropertyNameDataPointBinding PropertyName="ReadingDateTime" />
+                        </chart:LineSeries.CategoryBinding>
+                        <chart:LineSeries.ValueBinding>
+                            <chart:PropertyNameDataPointBinding PropertyName="Humidity" />
+                        </chart:LineSeries.ValueBinding>
+                        <chart:ChartTrackBallBehavior.TrackInfoTemplate>
+                            <DataTemplate>
+                                <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
+                                    <TextBlock Text="{Binding DataPoint.DataItem.Humidity, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}%'}"
+                                               Margin="5" />
+                                </Border>
+                            </DataTemplate>
+                        </chart:ChartTrackBallBehavior.TrackInfoTemplate>
+                    </chart:LineSeries>
+                </chart:RadCartesianChart>
+            </PivotItem>
+            <PivotItem Header="Data">
+                <ListView ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="m:ReadingModel">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind ReadingDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:M/dd/yyyy h:mm:ss tt}'}" />
+                                <TextBlock Text="{x:Bind Temperature, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}°C'}"
+                                           Grid.Column="1" />
+                                <TextBlock Text="{x:Bind Humidity, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}%'}"
+                                           Grid.Column="2" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+        </Pivot>
         <toolkit:RangeSelector Minimum="0"
                                Maximum="{x:Bind ViewModel.RangeSize, Mode=OneWay}"
                                RangeMin="{x:Bind ViewModel.RangeMin, Mode=TwoWay}"
@@ -169,29 +206,30 @@
                        Margin="10"
                        RelativePanel.RightOf="StartupText" />
             <RelativePanel x:Name="ReadoutPanel"
-                           Margin="10"
                            RelativePanel.Below="LastReadText">
                 <toolkit:HeaderedTextBlock x:Name="LatestTemperature"
                                            Header="Temperature"
-                                           Text="{x:Bind ViewModel.Temperature, Mode=OneWay}" />
+                                           Text="{x:Bind ViewModel.Temperature, Mode=OneWay}"
+                                           Margin="10" />
                 <toolkit:HeaderedTextBlock x:Name="LatestHumidity"
                                            Header="Humidity"
                                            Text="{x:Bind ViewModel.Humidity, Mode=OneWay}"
-                                           RelativePanel.Below="LatestTemperature" />
+                                           Margin="10"
+                                           RelativePanel.RightOf="LatestTemperature" />
             </RelativePanel>
-            <RelativePanel x:Name="SettingsPanel"
-                           Margin="10"
-                           RelativePanel.Below="LastReadText"
-                           RelativePanel.RightOf="ReadoutPanel">
-                <ToggleSwitch x:Name="AutoScrollToggle"
-                              Header="Auto-scroll to new reading"
-                              IsOn="{x:Bind ViewModel.AutoScroll, Mode=TwoWay}"
-                              Margin="10,0" />
-                <ToggleSwitch Header="Maintain scope during auto-scroll"
-                              IsOn="{x:Bind ViewModel.MaintainScope, Mode=TwoWay}"
-                              Margin="10,0"
-                              RelativePanel.Below="AutoScrollToggle" />
-            </RelativePanel>
+            <!--<RelativePanel x:Name="SettingsPanel"
+                               Margin="10"
+                               RelativePanel.Below="LastReadText"
+                               RelativePanel.RightOf="ReadoutPanel">
+                    <ToggleSwitch x:Name="AutoScrollToggle"
+                                  Header="Auto-scroll to new reading"
+                                  IsOn="{x:Bind ViewModel.AutoScroll, Mode=TwoWay}"
+                                  Margin="10,0" />
+                    <ToggleSwitch Header="Maintain scope during auto-scroll"
+                                  IsOn="{x:Bind ViewModel.MaintainScope, Mode=TwoWay}"
+                                  Margin="10,0"
+                                  RelativePanel.Below="AutoScrollToggle" />
+                </RelativePanel>-->
             <!--<Button Content="Add Sample Readings"
                     Click="{x:Bind ViewModel.AddSampleReadings}"
                     Margin="10"

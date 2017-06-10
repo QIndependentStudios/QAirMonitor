@@ -48,9 +48,6 @@ namespace QAirMonitor.UWP.ViewModels
             var repo = new HistoricalReadingRepository();
             _readAllRepo = repo;
             _writeRepo = repo;
-
-            if (App.SensorDataCollector != null)
-                App.SensorDataCollector.ReadingReceived += SensorDataCollector_ReadingReceived;
         }
         #endregion
 
@@ -239,10 +236,13 @@ namespace QAirMonitor.UWP.ViewModels
             LastReading = $"Read on {reading.ReadingDateTime:M/d/yyyy h:mm:ss tt} with {attempts} attempt(s).";
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { Readings.Insert(0, reading); });
+                () =>
+                {
+                    Readings.Insert(0, reading);
 
-            SetRangeSize();
-            ScrollRangeToLatest();
+                    SetRangeSize();
+                    ScrollRangeToLatest();
+                });
         }
         #endregion
 
