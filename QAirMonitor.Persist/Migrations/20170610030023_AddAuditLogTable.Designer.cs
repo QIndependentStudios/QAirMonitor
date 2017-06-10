@@ -9,8 +9,8 @@ using QAirMonitor.Domain.Enums;
 namespace QAirMonitor.Persist.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20170609161742_AddAuditLogging")]
-    partial class AddAuditLogging
+    [Migration("20170610030023_AddAuditLogTable")]
+    partial class AddAuditLogTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,7 +27,7 @@ namespace QAirMonitor.Persist.Migrations
                     b.Property<int>("EventType");
 
                     b.Property<string>("Message")
-                        .HasMaxLength(255);
+                        .HasMaxLength(2000);
 
                     b.HasKey("AuditLogID");
 

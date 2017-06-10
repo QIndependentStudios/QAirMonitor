@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace QAirMonitor.Persist.Migrations
 {
-    public partial class AddAuditLogging : Migration
+    public partial class AddAuditLogTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,7 @@ namespace QAirMonitor.Persist.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     EventDateTime = table.Column<DateTime>(nullable: false),
                     EventType = table.Column<int>(nullable: false),
-                    Message = table.Column<string>(maxLength: 255, nullable: true)
+                    Message = table.Column<string>(maxLength: 2000, nullable: true)
                 },
                 constraints: table =>
                 {

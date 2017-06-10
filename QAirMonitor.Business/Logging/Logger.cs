@@ -12,12 +12,12 @@ namespace QAirMonitor.Business.Logging
     {
         private static readonly IAuditLogRepository<AuditLogModel, AuditLogEventType> _repo = new AuditLogRepository();
 
-        private static string CreateLogMessage(string caller, string message, int maxLength = 255)
+        private static string CreateLogMessage(string caller, string message, int maxLength = 2000)
         {
             var str = $"{caller}: {message}";
             return str == null
                 ? string.Empty
-                : str.Substring(0, Math.Min(150, str.Length));
+                : str.Substring(0, Math.Min(maxLength, str.Length));
         }
 
         public static async Task LogAsync(string caller, string message, AuditLogEventType eventType = AuditLogEventType.Event)
@@ -27,7 +27,7 @@ namespace QAirMonitor.Business.Logging
 
         public static async Task LogExceptionAsync(string caller, Exception e)
         {
-            await LogAsync(caller, $"Exception thrown. {e.Message}", AuditLogEventType.Error);
+            await LogAsync(caller, $"Exception thrown. {e.Message} {e.StackTrace}", AuditLogEventType.Error);
         }
 
         public static async Task<IEnumerable<AuditLogModel>> GetLogsAsync()

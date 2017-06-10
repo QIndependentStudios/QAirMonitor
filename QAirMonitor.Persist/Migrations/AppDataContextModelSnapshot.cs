@@ -26,7 +26,7 @@ namespace QAirMonitor.Persist.Migrations
                     b.Property<int>("EventType");
 
                     b.Property<string>("Message")
-                        .HasMaxLength(255);
+                        .HasMaxLength(2000);
 
                     b.HasKey("AuditLogID");
 

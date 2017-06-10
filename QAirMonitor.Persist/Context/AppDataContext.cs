@@ -27,7 +27,7 @@ namespace QAirMonitor.Persist.Context
 
             modelBuilder.Entity<AuditLogModel>()
                 .Property(l => l.Message)
-                .HasMaxLength(255);
+                .HasMaxLength(2000);
         }
     }
 }
