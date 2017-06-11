@@ -37,7 +37,7 @@ namespace QAirMonitor.Hardware.UWP.Sensors
 
                 if (hdtReading.IsValid)
                 {
-                    await Logger.LogAsync($"{nameof(DhtTempHumiditySensor)}", $"Successful reading. {reading.Temperature}°C, {reading.Humidity}%, {reading.Attempts} attempt(s).");
+                    await Logger.LogAsync($"{nameof(DhtTempHumiditySensor)}", $"Successful reading. {reading.Temperature:0.00}°C, {reading.Humidity:0.00}%, {reading.Attempts} attempt(s).");
                 }
                 else
                 {

@@ -36,10 +36,11 @@ namespace QAirMonitor.UWP.ViewModels
         private Point _scrollOffset;
         private bool _autoScroll = true;
         private bool _maintainScope;
-        private string _temperature = "n/a";
-        private string _humidity = "n/a";
+        private string _temperature;
+        private string _humidity;
         private string _startup;
         private string _lastReading;
+        private int _selectedPivotIndex;
         #endregion
 
         #region Constructors
@@ -131,6 +132,18 @@ namespace QAirMonitor.UWP.ViewModels
             get { return _lastReading; }
             set { Set(ref _lastReading, value); }
         }
+
+        public int SelectedPivotIndex
+        {
+            get { return _selectedPivotIndex; }
+            set
+            {
+                Set(ref _selectedPivotIndex, value);
+                RaisePropertyChanged(nameof(IsGraphVisible));
+            }
+        }
+
+        public bool IsGraphVisible => SelectedPivotIndex == 0;
         #endregion
 
         #region Methods

@@ -3,10 +3,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:m="using:QAirMonitor.Domain.Models"
       xmlns:vm="using:QAirMonitor.UWP.ViewModels"
-      xmlns:behaviors="using:Template10.Behaviors"
+      xmlns:q="using:QKit.Controls"
       mc:Ignorable="d">
     <Page.DataContext>
         <vm:LogPageViewModel x:Name="ViewModel" />
@@ -24,13 +23,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <AppBarButton Icon="Back"
-                      Visibility="{x:Bind ViewModel.IsIot}">
-            <i:Interaction.Behaviors>
-                <behaviors:NavButtonBehavior Direction="Back"
-                                             Frame="{x:Bind Frame, Mode=OneWay}" />
-            </i:Interaction.Behaviors>
-        </AppBarButton>
+        <q:CustomTitleBar Content="QAirMonitor.UWP"
+                          NavigationFrame="{x:Bind Frame, Mode=OneWay}" />
         <ListView ItemsSource="{x:Bind ViewModel.LogEntries, Mode=OneWay}"
                   SelectionMode="None"
                   Grid.Row="1">
