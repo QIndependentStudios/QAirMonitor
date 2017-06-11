@@ -27,7 +27,7 @@ namespace QAirMonitor.Hardware.UWP.Sensors
             {
                 DhtReading hdtReading = new DhtReading();
 
-                hdtReading = await _dhtSensor.GetReadingAsync(250).AsTask();
+                hdtReading = await _dhtSensor.GetReadingAsync(500).AsTask();
 
                 reading.Temperature = hdtReading.Temperature;
                 reading.Humidity = hdtReading.Humidity;

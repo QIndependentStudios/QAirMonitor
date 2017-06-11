@@ -37,7 +37,8 @@ namespace QAirMonitor.Hardware.UWP.Sensors
                 Temperature = _rand.Next((int)(_minTempLimit * 100), (int)(_maxTempLimit * 100)) / 100.0,
                 Humidity = _rand.Next((int)(_minHumidityLimit * 100), (int)(_maxHumidityLimit * 100)) / 100.0,
                 ReadingDateTime = DateTime.Now,
-                Attempts = 1
+                Attempts = 1,
+                IsSuccessful = true
             };
 
             await Logger.LogAsync($"{nameof(DhtTempHumiditySensor)}", $"Successful reading. {reading.Temperature}°C, {reading.Humidity}%, {reading.Attempts} attempt(s).");
