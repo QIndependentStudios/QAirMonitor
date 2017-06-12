@@ -16,6 +16,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Background;
 
 namespace QAirMonitor.UWP
 {
@@ -83,7 +84,51 @@ namespace QAirMonitor.UWP
             await StartSensorDataCollection();
 
             NavigationService.Navigate(typeof(MainPage));
+
+            RegisterPeriodicNotifierBackgroundTask();
+
             await Task.CompletedTask;
+        }
+
+        private static void RegisterPeriodicNotifierBackgroundTask()
+        {
+            var hourlyTrigger = new TimeTrigger(60, false);
+            //var requestStatus = await BackgroundExecutionManager.RequestAccessAsync();
+            //if (requestStatus != BackgroundAccessStatus.AlwaysAllowed)
+            //{
+            //    System.Diagnostics.Debug.WriteLine("Background tasks not allowed.");
+            //}
+
+            string entryPoint = typeof(Tasks.NotifyActivity).FullName;
+            string taskName = "PeriodicNotifier";
+
+            var task = RegisterBackgroundTask(entryPoint, taskName, hourlyTrigger, null);
+        }
+
+        public static BackgroundTaskRegistration RegisterBackgroundTask(string taskEntryPoint,
+            string taskName,
+            IBackgroundTrigger trigger,
+            IBackgroundCondition condition)
+        {
+            var matchingTasks = BackgroundTaskRegistration.AllTasks.Where(t => t.Value.Name == taskName);
+            if (matchingTasks.Any())
+                return (BackgroundTaskRegistration)(matchingTasks.FirstOrDefault().Value);
+
+            var builder = new BackgroundTaskBuilder()
+            {
+                Name = taskName,
+                TaskEntryPoint = taskEntryPoint
+            };
+            builder.SetTrigger(trigger);
+
+            if (condition != null)
+            {
+                builder.AddCondition(condition);
+            }
+
+            BackgroundTaskRegistration task = builder.Register();
+
+            return task;
         }
 
         public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunchActivated)

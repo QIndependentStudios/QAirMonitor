@@ -9,7 +9,9 @@ using System;
 
 namespace QAirMonitor.Persist.Repositories
 {
-    public class HistoricalReadingRepository : IReadAllRepository<ReadingModel>, IWriteRepository<ReadingModel>
+    public class HistoricalReadingRepository : IReadAllRepository<ReadingModel>,
+        IReadDateRangeRepository<ReadingModel>,
+        IWriteRepository<ReadingModel>
     {
         public async Task<IEnumerable<ReadingModel>> GetAllAsync()
         {
@@ -17,6 +19,23 @@ namespace QAirMonitor.Persist.Repositories
             {
                 return await context.Readings
                     .OrderByDescending(r => r.ReadingDateTime)
+                    .ThenByDescending(r => r.ReadingID)
+                    .ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<ReadingModel>> GetInDateRangeAsync(DateTime startDate,
+            DateTime? endDate = null)
+        {
+            using (var context = new AppDataContext())
+            {
+                var query = context.Readings
+                    .Where(r => r.ReadingID != 1 && r.ReadingDateTime > startDate);
+
+                if (endDate != null)
+                    query = query.Where(r => r.ReadingDateTime <= endDate);
+
+                return await query.OrderByDescending(r => r.ReadingDateTime)
                     .ThenByDescending(r => r.ReadingID)
                     .ToListAsync();
             }
