@@ -69,7 +69,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <q:CustomTitleBar Content="QAirMonitor.UWP"
+        <q:CustomTitleBar Content="QAirMonitor"
                           NavigationFrame="{x:Bind Frame, Mode=OneWay}" />
         <Pivot SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}"
                Grid.Row="1">

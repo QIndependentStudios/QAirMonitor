@@ -23,7 +23,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <q:CustomTitleBar Content="QAirMonitor.UWP"
+        <q:CustomTitleBar Content="QAirMonitor"
                           NavigationFrame="{x:Bind Frame, Mode=OneWay}" />
         <ListView ItemsSource="{x:Bind ViewModel.LogEntries, Mode=OneWay}"
                   SelectionMode="None"
