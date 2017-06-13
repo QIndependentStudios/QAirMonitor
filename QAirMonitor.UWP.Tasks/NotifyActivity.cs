@@ -26,6 +26,10 @@ namespace QAirMonitor.UWP.Tasks
             var settingsService = SettingsService.Instance;
             var settings = new NotificationSettings
             {
+                LowerTempRangeThreshold = settingsService.LowerTempRangeThreshold,
+                UpperTempRangeThreshold = settingsService.UpperTempRangeThreshold,
+                LowerHumidityRangeThreshold = settingsService.LowerHumidityRangeThreshold,
+                UpperHumidityRangeThreshold = settingsService.UpperHumidityRangeThreshold,
                 IsEmailNotificationEnabled = settingsService.IsEmailNotificationEnabled,
                 IsIftttNotificationEnabled = settingsService.IsIftttNotificationEnabled,
                 EmailNotificationRecipient = settingsService.EmailNotificationRecipient,

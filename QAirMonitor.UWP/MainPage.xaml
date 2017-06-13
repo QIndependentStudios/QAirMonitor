@@ -6,8 +6,8 @@
       xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:m="using:QAirMonitor.Domain.Models"
       xmlns:vm="using:QAirMonitor.UWP.ViewModels"
-      xmlns:chart="using:Telerik.UI.Xaml.Controls.Chart"
       xmlns:q="using:QKit.Controls"
+      xmlns:chart="using:Telerik.UI.Xaml.Controls.Chart"
       mc:Ignorable="d">
     <Page.Resources>
         <Color x:Key="TemperatureChartColor">#FFA500</Color>
@@ -100,14 +100,14 @@
                         </chart:RadCartesianChart.Palette>
                         <chart:RadCartesianChart.Annotations>
                             <chart:CartesianPlotBandAnnotation Axis="{x:Bind TempVerticalAxis}"
-                                                               From="1"
-                                                               To="4"
+                                                               From="{x:Bind ViewModel.LowerTempRangeThreshold}"
+                                                               To="{x:Bind ViewModel.UpperTempRangeThreshold}"
                                                                Stroke="{ThemeResource TemperatureChartMidBrush}"
                                                                StrokeThickness="1"
                                                                Fill="{ThemeResource TemperatureChartLowBrush}" />
                             <chart:CartesianPlotBandAnnotation Axis="{x:Bind HumidityVerticalAxis}"
-                                                               From="70"
-                                                               To="85"
+                                                               From="{x:Bind ViewModel.LowerHumidityRangeThreshold}"
+                                                               To="{x:Bind ViewModel.UpperHumidityRangeThreshold}"
                                                                Stroke="{ThemeResource HumidityChartMidBrush}"
                                                                StrokeThickness="1"
                                                                Fill="{ThemeResource HumidityChartLowBrush}" />

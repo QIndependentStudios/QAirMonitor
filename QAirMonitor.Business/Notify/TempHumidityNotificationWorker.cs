@@ -5,6 +5,7 @@ using QAirMonitor.Domain.Notify;
 using QAirMonitor.Persist.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace QAirMonitor.Business.Notify
@@ -35,9 +36,22 @@ namespace QAirMonitor.Business.Notify
 
             var data = new TempHumidityNotificationData(readings);
 
-            var summary = $"QAirMonitor reports that in the past {Scope} hour(s), temperatures averaged {data.AverageTemperature:0.00}°C and humidity averaged {data.AverageHumidity:0.00}%.";
-            var readout = string.Empty;
+            var summary = !data.Readings.Any()
+                ? $"QAirMinitor found no readings for the past {Scope} hour(s)."
+                : $"QAirMonitor reports that in the past {Scope} hour(s), temperatures averaged {data.AverageTemperature:0.00}°C and humidity averaged {data.AverageHumidity:0.00}%.";
 
+            var tempsOutOfZone = data.Readings
+                .Count(r => r.Temperature > settings.UpperTempRangeThreshold || r.Temperature < settings.LowerTempRangeThreshold);
+            var humidityOutOfZone = data.Readings
+                .Count(r => r.Humidity > settings.UpperHumidityRangeThreshold || r.Humidity < settings.LowerHumidityRangeThreshold);
+
+            if (tempsOutOfZone > 0)
+                summary += $"\n\nWARNING: Temperature readings breached {tempsOutOfZone} time(s).";
+
+            if (humidityOutOfZone > 0)
+                summary += $"\n\nWARNING: Humidity readings breached {humidityOutOfZone} time(s).";
+
+            var readout = string.Empty;
             foreach (var reading in data.Readings)
             {
                 readout += $"{reading.ReadingDateTime:M/d/yy h:mm:ss tt}\t{reading.Temperature:0.00}°C\t{reading.Humidity:0.00}%\n";
@@ -55,7 +69,7 @@ namespace QAirMonitor.Business.Notify
                     await Logger.LogExceptionAsync(nameof(TempHumidityNotificationWorker), e);
                 }
             }
-            
+
             if (settings.IsIftttNotificationEnabled)
             {
                 var iftttPostData = new Dictionary<string, string>

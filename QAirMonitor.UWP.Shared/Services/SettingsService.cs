@@ -13,6 +13,30 @@ namespace QAirMonitor.UWP.Shared.Services
             _helper = new Template10.Services.SettingsService.SettingsHelper();
         }
 
+        public int LowerTempRangeThreshold
+        {
+            get { return _helper.Read(nameof(LowerTempRangeThreshold), 1); }
+            set { _helper.Write(nameof(LowerTempRangeThreshold), value); }
+        }
+
+        public int UpperTempRangeThreshold
+        {
+            get { return _helper.Read(nameof(UpperTempRangeThreshold), 4); }
+            set { _helper.Write(nameof(UpperTempRangeThreshold), value); }
+        }
+
+        public int LowerHumidityRangeThreshold
+        {
+            get { return _helper.Read(nameof(LowerHumidityRangeThreshold), 60); }
+            set { _helper.Write(nameof(LowerHumidityRangeThreshold), value); }
+        }
+
+        public int UpperHumidityRangeThreshold
+        {
+            get { return _helper.Read(nameof(UpperHumidityRangeThreshold), 75); }
+            set { _helper.Write(nameof(UpperHumidityRangeThreshold), value); }
+        }
+
         public bool IsEmailNotificationEnabled
         {
             get { return _helper.Read(nameof(IsEmailNotificationEnabled), false); }

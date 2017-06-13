@@ -1,21 +1,38 @@
 ﻿using QAirMonitor.UWP.Shared.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Template10.Mvvm;
 using Windows.ApplicationModel;
+using Windows.UI.Popups;
+using Windows.UI.Xaml.Navigation;
 
 namespace QAirMonitor.UWP.ViewModels
 {
     public class SettingsPageViewModel : ViewModelBase
     {
         #region Fields
+        private const int TempRangeMin = -5;
+        private const int TempRangeMax = 25;
+        private const int HumidityRangeMin = 0;
+        private const int HumidityRangeMax = 100;
+
+        private readonly IEnumerable<int> _temperatureValues = Enumerable.Range(TempRangeMin, TempRangeMax - TempRangeMin);
+        private readonly IEnumerable<int> _humidityValues = Enumerable.Range(HumidityRangeMin, HumidityRangeMax - HumidityRangeMin);
+
         private readonly SettingsService _settings;
 
+        private int _lowerTempRangeThreshold;
+        private int _upperTempRangeThreshold;
+        private int _lowerHumidityRangeThreshold;
+        private int _upperHumidityRangeThreshold;
         private bool _isEmailNotificationEnabled;
         private bool _isIftttNotificationEnabled;
         private string _emailRecipient;
         private string _iftttSecretKey;
-        private TimeSpan _notificationStartTime = TimeSpan.FromHours(8);
-        private TimeSpan _notificationEndTime = TimeSpan.FromHours(22);
+        private TimeSpan _notificationStartTime;
+        private TimeSpan _notificationEndTime;
         #endregion
 
         #region Constructors
@@ -25,16 +42,34 @@ namespace QAirMonitor.UWP.ViewModels
                 return;
 
             _settings = SettingsService.Instance;
-            _isEmailNotificationEnabled = _settings.IsEmailNotificationEnabled;
-            _isIftttNotificationEnabled = _settings.IsIftttNotificationEnabled;
-            _emailRecipient = _settings.EmailNotificationRecipient;
-            _iftttSecretKey = _settings.IftttSecretKey;
-            _notificationStartTime = _settings.NotificationStartTime;
-            _notificationEndTime = _settings.NotificationEndTime;
         }
         #endregion
 
         #region Properties
+        public int LowerTempRangeThreshold
+        {
+            get { return _lowerTempRangeThreshold; }
+            set { Set(ref _lowerTempRangeThreshold, value); }
+        }
+
+        public int UpperTempRangeThreshold
+        {
+            get { return _upperTempRangeThreshold; }
+            set { Set(ref _upperTempRangeThreshold, value); }
+        }
+
+        public int LowerHumidityRangeThreshold
+        {
+            get { return _lowerHumidityRangeThreshold; }
+            set { Set(ref _lowerHumidityRangeThreshold, value); }
+        }
+
+        public int UpperHumidityRangeThreshold
+        {
+            get { return _upperHumidityRangeThreshold; }
+            set { Set(ref _upperHumidityRangeThreshold, value); }
+        }
+
         public bool IsEmailNotificationEnabled
         {
             get { return _isEmailNotificationEnabled; }
@@ -70,11 +105,49 @@ namespace QAirMonitor.UWP.ViewModels
             get { return _notificationEndTime; }
             set { Set(ref _notificationEndTime, value); }
         }
+
+        public IEnumerable<int> TemperatureValues => _temperatureValues;
+
+        public IEnumerable<int> HumidityValues => _humidityValues;
+        #endregion
+
+        #region Methods
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            LowerTempRangeThreshold = _settings.LowerTempRangeThreshold;
+            UpperTempRangeThreshold = _settings.UpperTempRangeThreshold;
+            LowerHumidityRangeThreshold = _settings.LowerHumidityRangeThreshold;
+            UpperHumidityRangeThreshold = _settings.UpperHumidityRangeThreshold;
+            IsEmailNotificationEnabled = _settings.IsEmailNotificationEnabled;
+            IsIftttNotificationEnabled = _settings.IsIftttNotificationEnabled;
+            EmailRecipient = _settings.EmailNotificationRecipient;
+            IftttSecretKey = _settings.IftttSecretKey;
+            NotificationStartTime = _settings.NotificationStartTime;
+            NotificationEndTime = _settings.NotificationEndTime;
+            return base.OnNavigatedToAsync(parameter, mode, state);
+        }
         #endregion
 
         #region Event Handlers
-        public void SaveSettings()
+        public async void SaveSettings()
         {
+            if (LowerTempRangeThreshold >= UpperTempRangeThreshold)
+            {
+                await new MessageDialog("Invalid temperature range.").ShowAsync();
+                return;
+            }
+
+
+            if (LowerHumidityRangeThreshold >= UpperHumidityRangeThreshold)
+            {
+                await new MessageDialog("Invalid humidity range.").ShowAsync();
+                return;
+            }
+
+            _settings.LowerTempRangeThreshold = LowerTempRangeThreshold;
+            _settings.UpperTempRangeThreshold = UpperTempRangeThreshold;
+            _settings.LowerHumidityRangeThreshold = LowerHumidityRangeThreshold;
+            _settings.UpperHumidityRangeThreshold = UpperHumidityRangeThreshold;
             _settings.IsEmailNotificationEnabled = IsEmailNotificationEnabled;
             _settings.IsIftttNotificationEnabled = IsIftttNotificationEnabled;
             _settings.EmailNotificationRecipient = EmailRecipient;

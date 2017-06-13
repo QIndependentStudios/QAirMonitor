@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using QAirMonitor.Domain.Models;
 
 namespace QAirMonitor.Persist.Context
@@ -12,7 +13,8 @@ namespace QAirMonitor.Persist.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connection = new SqliteConnection("Filename=AppData.db");
-            optionsBuilder.UseSqlite(connection);
+            optionsBuilder.UseSqlite(connection)
+                .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

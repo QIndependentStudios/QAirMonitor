@@ -3,6 +3,7 @@ using QAirMonitor.Abstract.Persist;
 using QAirMonitor.Domain.Models;
 using QAirMonitor.Persist.Repositories;
 using QAirMonitor.UWP.Pages;
+using QAirMonitor.UWP.Shared.Services;
 using QAirMonitor.UWP.Utils;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,8 @@ namespace QAirMonitor.UWP.ViewModels
         #region Fields
         private readonly IReadAllRepository<ReadingModel> _readAllRepo;
         private readonly IWriteRepository<ReadingModel> _writeRepo;
+
+        private readonly SettingsService _settings;
 
         private ObservableCollection<ReadingModel> _readings;
         private double _rangeSize;
@@ -45,6 +48,8 @@ namespace QAirMonitor.UWP.ViewModels
             var repo = new HistoricalReadingRepository();
             _readAllRepo = repo;
             _writeRepo = repo;
+
+            _settings = SettingsService.Instance;
         }
         #endregion
 
@@ -140,6 +145,14 @@ namespace QAirMonitor.UWP.ViewModels
         }
 
         public bool IsGraphVisible => SelectedPivotIndex == 0;
+
+        public int LowerTempRangeThreshold => _settings.LowerTempRangeThreshold;
+
+        public int UpperTempRangeThreshold => _settings.UpperTempRangeThreshold;
+
+        public int LowerHumidityRangeThreshold => _settings.LowerHumidityRangeThreshold;
+
+        public int UpperHumidityRangeThreshold => _settings.UpperHumidityRangeThreshold;
         #endregion
 
         #region Methods

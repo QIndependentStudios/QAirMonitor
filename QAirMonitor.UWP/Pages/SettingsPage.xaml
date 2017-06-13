@@ -6,6 +6,16 @@
       xmlns:vm="using:QAirMonitor.UWP.ViewModels"
       xmlns:q="using:QKit.Controls"
       mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="TemperatureItemTemplate"
+                      x:DataType="x:Int32">
+            <TextBlock Text="{x:Bind Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0}°C'}" />
+        </DataTemplate>
+        <DataTemplate x:Key="HumidityItemTemplate"
+                      x:DataType="x:Int32">
+            <TextBlock Text="{x:Bind Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0}%'}" />
+        </DataTemplate>
+    </Page.Resources>
     <Page.DataContext>
         <vm:SettingsPageViewModel x:Name="ViewModel" />
     </Page.DataContext>
@@ -32,9 +42,60 @@
                         <RepositionThemeTransition />
                     </TransitionCollection>
                 </RelativePanel.ChildrenTransitions>
+                <TextBlock x:Name="SafeZoneSettingsHeader"
+                           Text="Safe zones"
+                           Style="{ThemeResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="TempSafeZoneSettingsHeader"
+                           Text="Temperature safe zone range"
+                           Margin="{ThemeResource ComboBoxHeaderThemeMargin}"
+                           FontWeight="{ThemeResource ComboBoxHeaderThemeFontWeight}"
+                           RelativePanel.Below="SafeZoneSettingsHeader" />
+                <ComboBox x:Name="MinTempComboBox"
+                          ItemsSource="{x:Bind ViewModel.TemperatureValues}"
+                          SelectedValue="{x:Bind ViewModel.LowerTempRangeThreshold, Mode=TwoWay}"
+                          ItemTemplate="{ThemeResource TemperatureItemTemplate}"
+                          Width="80"
+                          RelativePanel.Below="TempSafeZoneSettingsHeader" />
+                <TextBlock x:Name="TempToTextBlock"
+                           Text="-"
+                           Margin="10,0"
+                           RelativePanel.AlignVerticalCenterWith="MinTempComboBox"
+                           RelativePanel.RightOf="MinTempComboBox" />
+                <ComboBox x:Name="MaxTempComboBox"
+                          ItemsSource="{x:Bind ViewModel.TemperatureValues}"
+                          SelectedValue="{x:Bind ViewModel.UpperTempRangeThreshold, Mode=TwoWay}"
+                          ItemTemplate="{ThemeResource TemperatureItemTemplate}"
+                          Width="80"
+                          RelativePanel.AlignVerticalCenterWith="MinTempComboBox"
+                          RelativePanel.RightOf="TempToTextBlock" />
+                <TextBlock x:Name="HumiditySafeZoneSettingsHeader"
+                           Text="Humidity safe zone range"
+                           FontWeight="{ThemeResource ComboBoxHeaderThemeFontWeight}"
+                           Margin="0,20,0,8"
+                           RelativePanel.Below="MinTempComboBox" />
+                <ComboBox x:Name="MinHumidityComboBox"
+                          ItemsSource="{x:Bind ViewModel.HumidityValues}"
+                          SelectedValue="{x:Bind ViewModel.LowerHumidityRangeThreshold, Mode=TwoWay}"
+                          ItemTemplate="{ThemeResource HumidityItemTemplate}"
+                          Width="80"
+                          RelativePanel.Below="HumiditySafeZoneSettingsHeader" />
+                <TextBlock x:Name="HumidityToTextBlock"
+                           Text="-"
+                           Margin="10,0"
+                           RelativePanel.AlignVerticalCenterWith="MinHumidityComboBox"
+                           RelativePanel.RightOf="MinTempComboBox" />
+                <ComboBox x:Name="MaxHumidityComboBox"
+                          ItemsSource="{x:Bind ViewModel.HumidityValues}"
+                          SelectedValue="{x:Bind ViewModel.UpperHumidityRangeThreshold, Mode=TwoWay}"
+                          ItemTemplate="{ThemeResource HumidityItemTemplate}"
+                          Width="80"
+                          RelativePanel.AlignVerticalCenterWith="MinHumidityComboBox"
+                          RelativePanel.RightOf="HumidityToTextBlock" />
                 <TextBlock x:Name="NotificationSettingsHeader"
                            Text="Notifications"
-                           Style="{ThemeResource TitleTextBlockStyle}" />
+                           Style="{ThemeResource TitleTextBlockStyle}"
+                           Margin="0,40,0,0"
+                           RelativePanel.Below="MinHumidityComboBox" />
                 <ToggleSwitch x:Name="EmailToggleSwitch"
                               Header="Email notifications"
                               IsOn="{x:Bind ViewModel.IsEmailNotificationEnabled, Mode=TwoWay}"
@@ -43,7 +104,7 @@
                 <TextBox x:Name="EmailRecipientAddressTextBox"
                          Header="Recipient's email address"
                          Text="{x:Bind ViewModel.EmailRecipient, Mode=TwoWay}"
-                         MinWidth="320"
+                         MinWidth="280"
                          Visibility="{x:Bind ViewModel.IsEmailNotificationEnabled, Mode=OneWay}"
                          Margin="0,0,0,40"
                          RelativePanel.Below="EmailToggleSwitch" />
@@ -55,7 +116,7 @@
                          Header="IFTTT maker webhook secret key"
                          Text="{x:Bind ViewModel.IftttSecretKey, Mode=TwoWay}"
                          Visibility="{x:Bind ViewModel.IsIftttNotificationEnabled, Mode=OneWay}"
-                         MinWidth="320"
+                         MinWidth="280"
                          RelativePanel.Below="IftttToggleSwitch" />
                 <TextBlock x:Name="IftttHintTextBlock"
                            Text="Use event name &quot;qairmonitor_notify&quot; when setting up your IFTTT applet."
