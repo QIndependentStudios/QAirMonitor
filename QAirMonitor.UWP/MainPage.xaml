@@ -48,6 +48,9 @@
             <AppBarButton Icon="ShowResults"
                           Label="Logs"
                           Click="{x:Bind ViewModel.ViewLogs}" />
+            <AppBarButton Icon="Setting"
+                          Label="Settings"
+                          Click="{x:Bind ViewModel.Settings}" />
             <AppBarSeparator Visibility="{x:Bind ViewModel.IsGraphVisible, Mode=OneWay}" />
             <AppBarButton Icon="Clear"
                           Label="Reset view"

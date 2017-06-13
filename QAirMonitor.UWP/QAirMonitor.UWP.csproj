@@ -102,11 +102,15 @@
     <Compile Include="Pages\LogPage.xaml.cs">
       <DependentUpon>LogPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Timers\SnappedIntervalTimer.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="ViewModels\LogPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
+    <Compile Include="ViewModels\SettingsPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -133,6 +137,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\LogPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -174,6 +182,10 @@
     <ProjectReference Include="..\QAirMonitor.Persist\QAirMonitor.Persist.csproj">
       <Project>{edc6cbfe-1439-4e39-beaa-648054ef3abf}</Project>
       <Name>QAirMonitor.Persist</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QAirMonitor.UWP.Shared\QAirMonitor.UWP.Shared.csproj">
+      <Project>{bc3c7425-aa03-4f53-bfe2-94196443a6ec}</Project>
+      <Name>QAirMonitor.UWP.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\QAirMonitor.UWP.Tasks\QAirMonitor.UWP.Tasks.csproj">
       <Project>{cad7ce08-ffd6-4b59-9bc4-4cc5825d1682}</Project>

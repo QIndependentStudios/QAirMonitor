@@ -19,9 +19,17 @@ namespace QAirMonitor.Business.Notify
             _repo = new HistoricalReadingRepository();
         }
 
-        public async Task RunAsync()
+        public async Task RunAsync(NotificationSettings settings)
         {
             await Logger.LogAsync(nameof(TempHumidityNotificationWorker), "Worker started.");
+
+            if (settings.NotificationStartTime != settings.NotificationEndTime &&
+                (DateTime.Now.TimeOfDay < settings.NotificationStartTime ||
+                DateTime.Now.TimeOfDay > settings.NotificationEndTime))
+            {
+                await Logger.LogAsync(nameof(TempHumidityNotificationWorker), "Worker completed: No action outside of notification active times.");
+                return;
+            }
 
             var readings = await _repo.GetInDateRangeAsync(DateTime.Now.AddHours(-1 * Scope), DateTime.Now);
 
@@ -35,18 +43,37 @@ namespace QAirMonitor.Business.Notify
                 readout += $"{reading.ReadingDateTime:M/d/yy h:mm:ss tt}\t{reading.Temperature:0.00}°C\t{reading.Humidity:0.00}%\n";
             }
 
-            var emailNotifier = new EmailNotifier();
-            await emailNotifier.SendNotificationAsync($"{summary}\n\n\n{readout}");
-
-
-            var iftttPostData = new Dictionary<string, string>
+            if (settings.IsEmailNotificationEnabled)
             {
-                { "value1", summary },
-                { "value2", $"\n\n{readout}" }
-            };
+                try
+                {
+                    var emailNotifier = new EmailNotifier();
+                    await emailNotifier.SendNotificationAsync($"{summary}\n\n\n{readout}", settings);
+                }
+                catch (Exception e)
+                {
+                    await Logger.LogExceptionAsync(nameof(TempHumidityNotificationWorker), e);
+                }
+            }
+            
+            if (settings.IsIftttNotificationEnabled)
+            {
+                var iftttPostData = new Dictionary<string, string>
+                {
+                    { "value1", summary },
+                    { "value2", $"\n\n{readout}" }
+                };
 
-            var iftttNotifier = new IFTTTNotifier();
-            await iftttNotifier.SendNotificationAsync(iftttPostData);
+                try
+                {
+                    var iftttNotifier = new IFTTTNotifier();
+                    await iftttNotifier.SendNotificationAsync(iftttPostData, settings);
+                }
+                catch (Exception e)
+                {
+                    await Logger.LogExceptionAsync(nameof(TempHumidityNotificationWorker), e);
+                }
+            }
 
             await Logger.LogAsync(nameof(TempHumidityNotificationWorker), "Worker completed.");
         }

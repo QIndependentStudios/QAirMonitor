@@ -1,5 +1,7 @@
 ﻿using QAirMonitor.Business.Logging;
 using QAirMonitor.Business.Notify;
+using QAirMonitor.Domain.Notify;
+using QAirMonitor.UWP.Shared.Services;
 using Windows.ApplicationModel.Background;
 
 namespace QAirMonitor.UWP.Tasks
@@ -21,8 +23,19 @@ namespace QAirMonitor.UWP.Tasks
             _deferral = taskInstance.GetDeferral();
             await Logger.LogAsync(nameof(NotifyActivity), "Background task started.");
 
+            var settingsService = SettingsService.Instance;
+            var settings = new NotificationSettings
+            {
+                IsEmailNotificationEnabled = settingsService.IsEmailNotificationEnabled,
+                IsIftttNotificationEnabled = settingsService.IsIftttNotificationEnabled,
+                EmailNotificationRecipient = settingsService.EmailNotificationRecipient,
+                IftttSecretKey = settingsService.IftttSecretKey,
+                NotificationStartTime = settingsService.NotificationStartTime,
+                NotificationEndTime = settingsService.NotificationEndTime
+            };
+
             var notificationWorker = new TempHumidityNotificationWorker();
-            await notificationWorker.RunAsync();
+            await notificationWorker.RunAsync(settings);
 
             await Logger.LogAsync(nameof(NotifyActivity), "Background task completed.");
             _deferral.Complete();

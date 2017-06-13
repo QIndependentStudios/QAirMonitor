@@ -2,18 +2,19 @@
 using MailKit.Security;
 using MimeKit;
 using QAirMonitor.Abstract.Business;
+using QAirMonitor.Domain.Notify;
 using System.Threading.Tasks;
 
 namespace QAirMonitor.Business.Notify
 {
-    public class EmailNotifier : INotifier<string>
+    public class EmailNotifier : INotifier<string, NotificationSettings>
     {
-        public async Task SendNotificationAsync(string data)
+        public async Task SendNotificationAsync(string data, NotificationSettings settings)
         {
             var emailMessage = new MimeMessage();
 
             emailMessage.From.Add(new MailboxAddress("QNotifyApp", "qnotify@outlook.com"));
-            emailMessage.To.Add(new MailboxAddress("QNotifyApp", "qnotify@outlook.com"));
+            emailMessage.To.Add(new MailboxAddress("QNotifyApp", settings.EmailNotificationRecipient));
             emailMessage.Subject = "QAirMonitor Notification";
             emailMessage.Body = new TextPart("plain") { Text = data };
 

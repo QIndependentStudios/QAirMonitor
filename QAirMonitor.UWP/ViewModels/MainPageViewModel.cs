@@ -1,11 +1,8 @@
 ﻿using QAirMonitor.Abstract.Business;
 using QAirMonitor.Abstract.Persist;
-using QAirMonitor.Business.SensorDataCollection;
 using QAirMonitor.Domain.Models;
-using QAirMonitor.Hardware.UWP.Sensors;
 using QAirMonitor.Persist.Repositories;
 using QAirMonitor.UWP.Pages;
-using QAirMonitor.UWP.Timers;
 using QAirMonitor.UWP.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,7 +13,6 @@ using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Navigation;
 
@@ -274,6 +270,11 @@ namespace QAirMonitor.UWP.ViewModels
         public void ViewLogs()
         {
             NavigationService.Navigate(typeof(LogPage));
+        }
+
+        public void Settings()
+        {
+            NavigationService.Navigate(typeof(SettingsPage));
         }
 
         public async Task AddSampleReadings()

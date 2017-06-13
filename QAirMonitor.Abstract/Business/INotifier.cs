@@ -2,8 +2,8 @@
 
 namespace QAirMonitor.Abstract.Business
 {
-    public interface INotifier<TData>
+    public interface INotifier<TData, TSettings>
     {
-        Task SendNotificationAsync (TData data);
+        Task SendNotificationAsync(TData data, TSettings settings);
     }
 }
