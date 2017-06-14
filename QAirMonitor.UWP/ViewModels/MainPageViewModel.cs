@@ -253,8 +253,8 @@ namespace QAirMonitor.UWP.ViewModels
                 return;
             }
 
-            Temperature = $"{reading.Temperature:0.00}°C";
-            Humidity = $"{reading.Humidity:0.00}%";
+            Temperature = $"{reading.Temperature:0.0}°C";
+            Humidity = $"{reading.Humidity:0.0}%";
             LastReading = $"Read on {reading.ReadingDateTime:M/d/yyyy h:mm:ss tt} with {attempts} attempt(s).";
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,

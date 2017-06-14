@@ -41,7 +41,7 @@ namespace QAirMonitor.Hardware.UWP.Sensors
                 IsSuccessful = true
             };
 
-            await Logger.LogAsync($"{nameof(VirtualTempHumiditySensor)}", $"Successful reading. {reading.Temperature:0.00}°C, {reading.Humidity:0.00}%, {reading.Attempts} attempt(s).");
+            await Logger.LogAsync($"{nameof(VirtualTempHumiditySensor)}", $"Successful reading. {reading.Temperature:0.0}°C, {reading.Humidity:0.0}%, {reading.Attempts} attempt(s).");
 
             return reading;
         }

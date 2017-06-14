@@ -46,15 +46,15 @@ namespace QAirMonitor.Business.Notify
                 .Count(r => r.Humidity > settings.UpperHumidityRangeThreshold || r.Humidity < settings.LowerHumidityRangeThreshold);
 
             if (tempsOutOfZone > 0)
-                summary += $"\n\nWARNING: Temperature readings breached {tempsOutOfZone} time(s).";
+                summary += $"\n\nWARNING: Temperature readings breached safe zone {tempsOutOfZone} time(s).";
 
             if (humidityOutOfZone > 0)
-                summary += $"\n\nWARNING: Humidity readings breached {humidityOutOfZone} time(s).";
+                summary += $"\n\nWARNING: Humidity readings breached safe zone {humidityOutOfZone} time(s).";
 
             var readout = string.Empty;
             foreach (var reading in data.Readings)
             {
-                readout += $"{reading.ReadingDateTime:M/d/yy h:mm:ss tt}\t{reading.Temperature:0.00}°C\t{reading.Humidity:0.00}%\n";
+                readout += $"{reading.ReadingDateTime:M/d/yy h:mm:ss tt}\t{reading.Temperature:0.0}°C\t{reading.Humidity:0.0}%\n";
             }
 
             if (settings.IsEmailNotificationEnabled)

@@ -33,9 +33,9 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{x:Bind ReadingDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:M/dd/yyyy h:mm:ss tt}'}" />
-                <TextBlock Text="{x:Bind Temperature, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}°C'}"
+                <TextBlock Text="{x:Bind Temperature, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.0}°C'}"
                            Grid.Column="1" />
-                <TextBlock Text="{x:Bind Humidity, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}%'}"
+                <TextBlock Text="{x:Bind Humidity, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.0}%'}"
                            Grid.Column="2" />
             </Grid>
         </DataTemplate>
@@ -138,7 +138,7 @@
                             <chart:ChartTrackBallBehavior.TrackInfoTemplate>
                                 <DataTemplate>
                                     <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
-                                        <TextBlock Text="{Binding DataPoint.DataItem.Temperature, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}°C'}"
+                                        <TextBlock Text="{Binding DataPoint.DataItem.Temperature, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.0}°C'}"
                                                    Margin="5" />
                                     </Border>
                                 </DataTemplate>
@@ -169,7 +169,7 @@
                             <chart:ChartTrackBallBehavior.TrackInfoTemplate>
                                 <DataTemplate>
                                     <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
-                                        <TextBlock Text="{Binding DataPoint.DataItem.Humidity, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.00}%'}"
+                                        <TextBlock Text="{Binding DataPoint.DataItem.Humidity, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.0}%'}"
                                                    Margin="5" />
                                     </Border>
                                 </DataTemplate>
