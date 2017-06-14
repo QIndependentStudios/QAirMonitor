@@ -1,4 +1,4 @@
-﻿<Page x:Class="QAirMonitor.UWP.MainPage"
+﻿<Page x:Class="QAirMonitor.UWP.Views.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -43,15 +43,46 @@
     <Page.DataContext>
         <vm:MainPageViewModel x:Name="ViewModel" />
     </Page.DataContext>
-    <Page.BottomAppBar>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NavigationMenuButton.Visibility"
+                                Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NavigationMenuButton.Visibility"
+                                Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <CommandBar DefaultLabelPosition="Right">
-            <AppBarButton Icon="ShowResults"
-                          Label="Logs"
-                          Click="{x:Bind ViewModel.ViewLogs}" />
-            <AppBarButton Icon="Setting"
-                          Label="Settings"
-                          Click="{x:Bind ViewModel.Settings}" />
-            <AppBarSeparator Visibility="{x:Bind ViewModel.IsGraphVisible, Mode=OneWay}" />
+            <CommandBar.Content>
+                <RelativePanel Height="{ThemeResource AppBarThemeCompactHeight}"
+                               Margin="{ThemeResource PageHeaderContentMargin}">
+                    <q:NavigationMenuMainButton x:Name="NavigationMenuButton"
+                                                Margin="{ThemeResource PageHeaderNavigationMenuMainButtonMargin}" />
+                    <TextBlock Text="HOME"
+                               Style="{ThemeResource PageHeaderTextBlockStyle}"
+                               RelativePanel.AlignVerticalCenterWithPanel="True"
+                               RelativePanel.RightOf="NavigationMenuButton" />
+                </RelativePanel>
+            </CommandBar.Content>
             <AppBarButton Icon="Clear"
                           Label="Reset view"
                           Click="{x:Bind ViewModel.Reset}"
@@ -65,15 +96,6 @@
                                 IsChecked="{x:Bind ViewModel.MaintainScope, Mode=TwoWay}"
                                 Visibility="{x:Bind ViewModel.IsGraphVisible, Mode=OneWay}" />
         </CommandBar>
-    </Page.BottomAppBar>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <q:CustomTitleBar Content="QAirMonitor"
-                          NavigationFrame="{x:Bind Frame, Mode=OneWay}" />
         <Pivot SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}"
                Grid.Row="1">
             <PivotItem Header="Chart">
@@ -200,43 +222,15 @@
             </PivotItem>
         </Pivot>
         <RelativePanel Grid.Row="2">
-            <TextBlock x:Name="StartupText"
-                       Text="{x:Bind ViewModel.Startup, Mode=OneWay}"
-                       Margin="10" />
-            <TextBlock x:Name="LastReadText"
-                       Text="{x:Bind ViewModel.LastReading, Mode=OneWay}"
-                       Margin="10"
-                       RelativePanel.RightOf="StartupText" />
-            <RelativePanel x:Name="ReadoutPanel"
-                           RelativePanel.Below="LastReadText">
-                <toolkit:HeaderedTextBlock x:Name="LatestTemperature"
-                                           Header="Temperature"
-                                           Text="{x:Bind ViewModel.Temperature, Mode=OneWay}"
-                                           Margin="10,0" />
-                <toolkit:HeaderedTextBlock x:Name="LatestHumidity"
-                                           Header="Humidity"
-                                           Text="{x:Bind ViewModel.Humidity, Mode=OneWay}"
-                                           Margin="10,0"
-                                           RelativePanel.RightOf="LatestTemperature" />
-            </RelativePanel>
-            <!--<RelativePanel x:Name="SettingsPanel"
-                               Margin="10"
-                               RelativePanel.Below="LastReadText"
-                               RelativePanel.RightOf="ReadoutPanel">
-                    <ToggleSwitch x:Name="AutoScrollToggle"
-                                  Header="Auto-scroll to new reading"
-                                  IsOn="{x:Bind ViewModel.AutoScroll, Mode=TwoWay}"
-                                  Margin="10,0" />
-                    <ToggleSwitch Header="Maintain scope during auto-scroll"
-                                  IsOn="{x:Bind ViewModel.MaintainScope, Mode=TwoWay}"
-                                  Margin="10,0"
-                                  RelativePanel.Below="AutoScrollToggle" />
-                </RelativePanel>-->
-            <!--<Button Content="Add Sample Readings"
-                    Click="{x:Bind ViewModel.AddSampleReadings}"
-                    Margin="10"
-                    RelativePanel.Below="LastReadText"
-                    RelativePanel.RightOf="SettingsPanel" />-->
+            <toolkit:HeaderedTextBlock x:Name="LatestTemperature"
+                                       Header="Temperature"
+                                       Text="{x:Bind ViewModel.Temperature, Mode=OneWay}"
+                                       Margin="10,0" />
+            <toolkit:HeaderedTextBlock x:Name="LatestHumidity"
+                                       Header="Humidity"
+                                       Text="{x:Bind ViewModel.Humidity, Mode=OneWay}"
+                                       Margin="10,0"
+                                       RelativePanel.RightOf="LatestTemperature" />
         </RelativePanel>
     </Grid>
 </Page>

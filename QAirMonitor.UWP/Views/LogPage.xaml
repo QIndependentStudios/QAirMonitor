@@ -10,21 +10,50 @@
     <Page.DataContext>
         <vm:LogPageViewModel x:Name="ViewModel" />
     </Page.DataContext>
-    <Page.BottomAppBar>
-        <CommandBar DefaultLabelPosition="Right">
-            <AppBarButton Icon="Refresh"
-                          Label="Refresh"
-                          Click="{x:Bind ViewModel.Refresh}" />
-        </CommandBar>
-    </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NavigationMenuButton.Visibility"
+                                Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NavigationMenuButton.Visibility"
+                                Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <q:CustomTitleBar Content="QAirMonitor"
-                          NavigationFrame="{x:Bind Frame, Mode=OneWay}" />
+        <CommandBar DefaultLabelPosition="Right">
+            <CommandBar.Content>
+                <RelativePanel Height="{ThemeResource AppBarThemeCompactHeight}"
+                               Margin="{ThemeResource PageHeaderContentMargin}">
+                    <q:NavigationMenuMainButton x:Name="NavigationMenuButton"
+                                                Margin="{ThemeResource PageHeaderNavigationMenuMainButtonMargin}" />
+                    <TextBlock Text="LOGS"
+                               Style="{ThemeResource PageHeaderTextBlockStyle}"
+                               RelativePanel.AlignVerticalCenterWithPanel="True"
+                               RelativePanel.RightOf="NavigationMenuButton" />
+                </RelativePanel>
+            </CommandBar.Content>
+            <AppBarButton Icon="Refresh"
+                          Label="Refresh"
+                          Click="{x:Bind ViewModel.Refresh}" />
+        </CommandBar>
         <ListView ItemsSource="{x:Bind ViewModel.LogEntries, Mode=OneWay}"
                   SelectionMode="None"
                   Grid.Row="1">

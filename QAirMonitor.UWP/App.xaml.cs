@@ -8,21 +8,21 @@ using QAirMonitor.Persist.Context;
 using QAirMonitor.Persist.Repositories;
 using QAirMonitor.UWP.Timers;
 using QAirMonitor.UWP.Utils;
+using QAirMonitor.UWP.Views;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Template10.Common;
-using Windows.ApplicationModel.Activation;
-using Windows.System.Profile;
-using Windows.UI.Xaml;
+using Template10.Controls;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
+using Windows.System.Profile;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 
 namespace QAirMonitor.UWP
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
     sealed partial class App : BootStrapper
     {
         public static readonly TimeSpan DataCollectionInterval = TimeSpan.FromMinutes(5);
@@ -38,11 +38,7 @@ namespace QAirMonitor.UWP
                 SensorDataCollector = new TempHumidityDataCollector(new SnappedIntervalTimer(DataCollectionInterval),
                     new VirtualTempHumiditySensor());
         }
-
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
+        
         public App()
         {
             UnhandledException += App_UnhandledException;
@@ -66,28 +62,6 @@ namespace QAirMonitor.UWP
             }
 
             SensorDataCollector.Start();
-        }
-
-        private async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            await Logger.LogExceptionAsync("App", e.Exception);
-        }
-
-        public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
-        {
-            // long-running startup tasks go here
-            using (var db = new AppDataContext())
-            {
-                await db.Database.MigrateAsync();
-            }
-
-            await StartSensorDataCollection();
-
-            NavigationService.Navigate(typeof(MainPage));
-
-            RegisterPeriodicNotifierBackgroundTask();
-
-            await Task.CompletedTask;
         }
 
         private static void RegisterPeriodicNotifierBackgroundTask()
@@ -131,6 +105,39 @@ namespace QAirMonitor.UWP
             return task;
         }
 
+        public override async Task OnInitializeAsync(IActivatedEventArgs args)
+        {
+            //ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(320, 480));
+
+            if (Window.Current.Content as ModalDialog == null)
+            {
+                // create a new frame 
+                var nav = NavigationServiceFactory(BackButton.Attach, ExistingContent.Include);
+
+                // create root
+                Window.Current.Content = new Shell(nav);
+            }
+            
+            await Task.CompletedTask;
+        }
+
+        public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
+        {
+            // long-running startup tasks go here
+            using (var db = new AppDataContext())
+            {
+                await db.Database.MigrateAsync();
+            }
+
+            await StartSensorDataCollection();
+
+            NavigationService.Navigate(typeof(MainPage));
+
+            RegisterPeriodicNotifierBackgroundTask();
+
+            await Task.CompletedTask;
+        }
+
         public override Task OnSuspendingAsync(object s, SuspendingEventArgs e, bool prelaunchActivated)
         {
             SensorDataCollector.Stop();
@@ -140,6 +147,11 @@ namespace QAirMonitor.UWP
         public override void OnResuming(object s, object e, AppExecutionState previousExecutionState)
         {
             SensorDataCollector.Start();
+        }
+
+        private async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            await Logger.LogExceptionAsync("App", e.Exception);
         }
     }
 }

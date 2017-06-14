@@ -1,0 +1,49 @@
+﻿<Page x:Class="QAirMonitor.UWP.Views.Shell"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:v="using:QAirMonitor.UWP.Views"
+      xmlns:q="using:QKit.Controls"
+      mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <q:CustomTitleBar Content="QAirMonitor"
+                          NavigationFrame="{x:Bind NavigationService.Frame, Mode=OneWay}" />
+        <q:NavigationMenuView x:Name="NavigationMenuRoot"
+                              SelectedMenuItemChanged="NavigationMenuRoot_SelectedMenuItemChanged"
+                              Grid.Row="1">
+            <q:NavigationMenuView.PrimaryMenuItems>
+                <q:NavigationMenuItem Content="Home"
+                                      PageType="v:MainPage"
+                                      ClearHistory="True"
+                                      AutomationProperties.Name="Home">
+                    <q:NavigationMenuItem.Icon>
+                        <FontIcon Glyph="&#xE9D9;" />
+                    </q:NavigationMenuItem.Icon>
+                </q:NavigationMenuItem>
+                <q:NavigationMenuItem Content="Logs"
+                                      PageType="v:LogPage"
+                                      ClearHistory="True"
+                                      AutomationProperties.Name="Logs">
+                    <q:NavigationMenuItem.Icon>
+                        <FontIcon Glyph="&#xE121;" />
+                    </q:NavigationMenuItem.Icon>
+                </q:NavigationMenuItem>
+            </q:NavigationMenuView.PrimaryMenuItems>
+            <q:NavigationMenuView.SecondaryMenuItems>
+                <q:NavigationMenuItem Content="Settings"
+                                      PageType="v:SettingsPage"
+                                      AutomationProperties.Name="Settings">
+                    <q:NavigationMenuItem.Icon>
+                        <FontIcon Glyph="&#xE115;" />
+                    </q:NavigationMenuItem.Icon>
+                </q:NavigationMenuItem>
+            </q:NavigationMenuView.SecondaryMenuItems>
+        </q:NavigationMenuView>
+    </Grid>
+</Page>

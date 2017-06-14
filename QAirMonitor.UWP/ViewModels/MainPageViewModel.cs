@@ -2,7 +2,6 @@
 using QAirMonitor.Abstract.Persist;
 using QAirMonitor.Domain.Models;
 using QAirMonitor.Persist.Repositories;
-using QAirMonitor.UWP.Views;
 using QAirMonitor.UWP.Shared.Services;
 using QAirMonitor.UWP.Utils;
 using System;
@@ -37,8 +36,6 @@ namespace QAirMonitor.UWP.ViewModels
         private bool _maintainScope;
         private string _temperature;
         private string _humidity;
-        private string _startup;
-        private string _lastReading;
         private int _selectedPivotIndex;
         #endregion
 
@@ -120,18 +117,6 @@ namespace QAirMonitor.UWP.ViewModels
         {
             get { return _humidity; }
             set { Set(ref _humidity, value); }
-        }
-
-        public string Startup
-        {
-            get { return _startup; }
-            set { Set(ref _startup, value); }
-        }
-
-        public string LastReading
-        {
-            get { return _lastReading; }
-            set { Set(ref _lastReading, value); }
         }
 
         public int SelectedPivotIndex
@@ -223,7 +208,6 @@ namespace QAirMonitor.UWP.ViewModels
 
         public async override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            Startup = $"Started: {App.Startup:M/d/yyyy h:mm:ss tt}";
             await LoadReadings();
 
             if (App.SensorDataCollector != null)
@@ -249,13 +233,11 @@ namespace QAirMonitor.UWP.ViewModels
             {
                 Temperature = "Unknown";
                 Humidity = "Unknown";
-                LastReading = $"Read on {DateTime.Now:M/d/yyyy h:mm:ss tt} with {attempts} attempt(s).";
                 return;
             }
 
             Temperature = $"{reading.Temperature:0.0}°C";
             Humidity = $"{reading.Humidity:0.0}%";
-            LastReading = $"Read on {reading.ReadingDateTime:M/d/yyyy h:mm:ss tt} with {attempts} attempt(s).";
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
@@ -278,16 +260,6 @@ namespace QAirMonitor.UWP.ViewModels
         {
             await LoadReadings();
             AutoScroll = true;
-        }
-
-        public void ViewLogs()
-        {
-            NavigationService.Navigate(typeof(LogPage));
-        }
-
-        public void Settings()
-        {
-            NavigationService.Navigate(typeof(SettingsPage));
         }
 
         public async Task AddSampleReadings()

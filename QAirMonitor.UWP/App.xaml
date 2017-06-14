@@ -5,5 +5,16 @@
                      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters">
     <common:BootStrapper.Resources>
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
+        
+        <Thickness x:Key="PageHeaderContentMargin">12,0</Thickness>
+        <Thickness x:Key="PageHeaderNavigationMenuMainButtonMargin">-12,0,0,0</Thickness>
+
+        <Style x:Key="PageHeaderTextBlockStyle"
+               TargetType="TextBlock">
+            <Setter Property="FontSize"
+                    Value="17" />
+            <Setter Property="FontWeight"
+                    Value="Bold" />
+        </Style>
     </common:BootStrapper.Resources>
 </common:BootStrapper>
