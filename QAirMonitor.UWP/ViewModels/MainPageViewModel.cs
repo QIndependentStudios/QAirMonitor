@@ -2,7 +2,7 @@
 using QAirMonitor.Abstract.Persist;
 using QAirMonitor.Domain.Models;
 using QAirMonitor.Persist.Repositories;
-using QAirMonitor.UWP.Pages;
+using QAirMonitor.UWP.Views;
 using QAirMonitor.UWP.Shared.Services;
 using QAirMonitor.UWP.Utils;
 using System;
