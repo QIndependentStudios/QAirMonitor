@@ -130,6 +130,7 @@
                               Header="Email notifications"
                               IsOn="{x:Bind ViewModel.IsEmailNotificationEnabled, Mode=TwoWay}"
                               Margin="0,0,0,10"
+                              IsEnabled="False"
                               RelativePanel.Below="NotificationSettingsHeader" />
                 <TextBox x:Name="EmailRecipientAddressTextBox"
                          Header="Recipient's email address"
