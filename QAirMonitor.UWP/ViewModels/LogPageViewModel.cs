@@ -18,7 +18,7 @@ namespace QAirMonitor.UWP.ViewModels
             set { Set(ref _logEntries, value); }
         }
 
-        public bool IsIot { get { return AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.IoT"; } }
+        public bool IsIot { get; } = AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.IoT";
 
         public async override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {

@@ -77,7 +77,7 @@
                                Margin="{ThemeResource PageHeaderContentMargin}">
                     <q:NavigationMenuMainButton x:Name="NavigationMenuButton"
                                                 Margin="{ThemeResource PageHeaderNavigationMenuMainButtonMargin}" />
-                    <TextBlock Text="HOME"
+                    <TextBlock Text="MONITOR"
                                Style="{ThemeResource PageHeaderTextBlockStyle}"
                                RelativePanel.AlignVerticalCenterWithPanel="True"
                                RelativePanel.RightOf="NavigationMenuButton" />
@@ -136,9 +136,7 @@
                         </chart:RadCartesianChart.Annotations>
                         <chart:LineSeries ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
                             <chart:LineSeries.HorizontalAxis>
-                                <chart:DateTimeContinuousAxis MajorStep="10"
-                                                              MajorStepUnit="Minute"
-                                                              LabelInterval="2"
+                                <chart:DateTimeContinuousAxis MaximumTicks="20"
                                                               LabelFitMode="Rotate"
                                                               LabelFormat="{}{0:h:mm tt}" />
                             </chart:LineSeries.HorizontalAxis>
@@ -160,16 +158,17 @@
                             <chart:ChartTrackBallBehavior.TrackInfoTemplate>
                                 <DataTemplate>
                                     <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
-                                        <TextBlock Text="{Binding DataPoint.DataItem.Temperature, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.0}°C'}"
-                                                   Margin="5" />
+                                        <StackPanel Margin="5">
+                                            <TextBlock Text="{Binding DataPoint.DataItem.Temperature, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}Temp: {0:0.0}°C'}" />
+                                            <TextBlock Text="{Binding DataPoint.DataItem.ReadingDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:M/d/yy h:mm:ss tt}'}" />
+                                        </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </chart:ChartTrackBallBehavior.TrackInfoTemplate>
                         </chart:LineSeries>
                         <chart:LineSeries ItemsSource="{x:Bind ViewModel.Readings, Mode=OneWay}">
                             <chart:LineSeries.HorizontalAxis>
-                                <chart:DateTimeContinuousAxis MajorStep="1"
-                                                              MajorStepUnit="Day"
+                                <chart:DateTimeContinuousAxis MaximumTicks="10"
                                                               VerticalLocation="Top"
                                                               LabelFormat="{}{0:M/d/yy}" />
                             </chart:LineSeries.HorizontalAxis>
@@ -191,20 +190,36 @@
                             <chart:ChartTrackBallBehavior.TrackInfoTemplate>
                                 <DataTemplate>
                                     <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
-                                        <TextBlock Text="{Binding DataPoint.DataItem.Humidity, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.0}%'}"
-                                                   Margin="5" />
+                                        <StackPanel Margin="5">
+                                            <TextBlock Text="{Binding DataPoint.DataItem.Humidity, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}Humidity: {0:0.0}%'}" />
+                                            <TextBlock Text="{Binding DataPoint.DataItem.ReadingDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:M/d/yy h:mm:ss tt}'}" />
+                                        </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </chart:ChartTrackBallBehavior.TrackInfoTemplate>
                         </chart:LineSeries>
                     </chart:RadCartesianChart>
-                    <toolkit:RangeSelector Minimum="0"
-                                           Maximum="{x:Bind ViewModel.RangeSize, Mode=OneWay}"
-                                           RangeMin="{x:Bind ViewModel.RangeMin, Mode=TwoWay}"
-                                           RangeMax="{x:Bind ViewModel.RangeMax, Mode=TwoWay}"
-                                           VerticalAlignment="Center"
-                                           Margin="40,20"
-                                           Grid.Row="1" />
+                    <RelativePanel Margin="40,0"
+                                   Grid.Row="1">
+                        <TextBlock x:Name="StartDateHeader"
+                                   Text="Readings since:"
+                                   Margin="{ThemeResource ComboBoxHeaderThemeMargin}"
+                                   FontWeight="{ThemeResource ComboBoxHeaderThemeFontWeight}" />
+                        <Button x:Name="StartDateButton"
+                                Content="{x:Bind ViewModel.StartDate.DateTime, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:M/dd/yyyy}'}"
+                                RelativePanel.Below="StartDateHeader">
+                            <Button.Flyout>
+                                <DatePickerFlyout Date="{x:Bind ViewModel.StartDate, Mode=TwoWay}" />
+                            </Button.Flyout>
+                        </Button>
+                        <toolkit:RangeSelector Minimum="0"
+                                               Maximum="{x:Bind ViewModel.RangeSize, Mode=OneWay}"
+                                               RangeMin="{x:Bind ViewModel.RangeMin, Mode=TwoWay}"
+                                               RangeMax="{x:Bind ViewModel.RangeMax, Mode=TwoWay}"
+                                               RelativePanel.RightOf="StartDateButton"
+                                               RelativePanel.AlignVerticalCenterWith="StartDateButton"
+                                               RelativePanel.AlignRightWithPanel="True" />
+                    </RelativePanel>
                 </Grid>
             </PivotItem>
             <PivotItem Header="Data">

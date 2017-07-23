@@ -21,7 +21,7 @@ namespace QAirMonitor.UWP.ViewModels
     public class MainPageViewModel : ViewModelBase
     {
         #region Fields
-        private readonly IReadAllRepository<ReadingModel> _readAllRepo;
+        private readonly IReadDateRangeRepository<ReadingModel> _readAllRepo;
         private readonly IWriteRepository<ReadingModel> _writeRepo;
 
         private readonly SettingsService _settings;
@@ -30,6 +30,7 @@ namespace QAirMonitor.UWP.ViewModels
         private double _rangeSize;
         private double _rangeMin;
         private double _rangeMax;
+        private DateTimeOffset _startDate;
         private Size _zoomFactor;
         private Point _scrollOffset;
         private bool _autoScroll = true;
@@ -47,6 +48,8 @@ namespace QAirMonitor.UWP.ViewModels
             _writeRepo = repo;
 
             _settings = SettingsService.Instance;
+
+            StartDate = DateTime.Today.AddDays(-7);
         }
         #endregion
 
@@ -74,6 +77,16 @@ namespace QAirMonitor.UWP.ViewModels
             {
                 Set(ref _rangeMax, value);
                 UpdateGraphView();
+            }
+        }
+
+        public DateTimeOffset StartDate
+        {
+            get { return _startDate; }
+            set
+            {
+                Set(ref _startDate, value);
+                LoadReadings();
             }
         }
 
@@ -198,9 +211,14 @@ namespace QAirMonitor.UWP.ViewModels
             RangeMin = RangeMax - range;
         }
 
-        private async Task LoadReadings()
+        private async void LoadReadings()
         {
-            Readings = new ObservableCollection<ReadingModel>(await _readAllRepo.GetAllAsync());
+            await LoadReadingsAsync();
+        }
+
+        private async Task LoadReadingsAsync()
+        {
+            Readings = new ObservableCollection<ReadingModel>(await _readAllRepo.GetInDateRangeAsync(StartDate.DateTime));
 
             SetRangeSize();
             SetDefaultSelectedRange();
@@ -208,10 +226,11 @@ namespace QAirMonitor.UWP.ViewModels
 
         public async override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            await LoadReadings();
+            await LoadReadingsAsync();
 
             if (App.SensorDataCollector != null)
             {
+                App.SensorDataCollector.ReadingReceived -= SensorDataCollector_ReadingReceived;
                 App.SensorDataCollector.ReadingReceived += SensorDataCollector_ReadingReceived;
                 await UpdateDisplay(App.SensorDataCollector.LastReading, App.SensorDataCollector.LastReadingAttempts);
             }
@@ -258,7 +277,7 @@ namespace QAirMonitor.UWP.ViewModels
 
         public async void Reset()
         {
-            await LoadReadings();
+            await LoadReadingsAsync();
             AutoScroll = true;
         }
 

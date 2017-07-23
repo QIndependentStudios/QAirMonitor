@@ -13,12 +13,13 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <q:CustomTitleBar Content="QAirMonitor"
-                          NavigationFrame="{x:Bind NavigationService.Frame, Mode=OneWay}" />
+                          NavigationFrame="{x:Bind NavigationService.Frame, Mode=OneWay}" 
+                          AutoHide="True"/>
         <q:NavigationMenuView x:Name="NavigationMenuRoot"
                               SelectedMenuItemChanged="NavigationMenuRoot_SelectedMenuItemChanged"
                               Grid.Row="1">
             <q:NavigationMenuView.PrimaryMenuItems>
-                <q:NavigationMenuItem Content="Home"
+                <q:NavigationMenuItem Content="Monitor"
                                       PageType="v:MainPage"
                                       ClearHistory="True"
                                       AutomationProperties.Name="Home">
