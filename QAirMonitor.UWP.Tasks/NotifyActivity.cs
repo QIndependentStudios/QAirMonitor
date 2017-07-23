@@ -8,19 +8,13 @@ namespace QAirMonitor.UWP.Tasks
 {
     public sealed class NotifyActivity : IBackgroundTask
     {
-        BackgroundTaskDeferral _deferral;
+        private BackgroundTaskDeferral _backgroundTaskDeferral;
 
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            // Query BackgroundWorkCost
-            // Guidance: If BackgroundWorkCost is high, then perform only the minimum amount
-            // of work in the background task and return immediately.
-            //var cost = BackgroundWorkCost.CurrentBackgroundWorkCost;
+            _backgroundTaskDeferral = taskInstance.GetDeferral();
+            taskInstance.Canceled += TaskCanceled;
 
-
-            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled);
-
-            _deferral = taskInstance.GetDeferral();
             await Logger.LogAsync(nameof(NotifyActivity), "Background task started.");
 
             var settingsService = SettingsService.Instance;
@@ -42,13 +36,13 @@ namespace QAirMonitor.UWP.Tasks
             await notificationWorker.RunAsync(settings);
 
             await Logger.LogAsync(nameof(NotifyActivity), "Background task completed.");
-            _deferral.Complete();
+            _backgroundTaskDeferral.Complete();
         }
 
-        private async void OnCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        private async void TaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
             await Logger.LogAsync(nameof(NotifyActivity), $"Background task canceled: {reason}");
-            _deferral.Complete();
+            _backgroundTaskDeferral.Complete();
         }
     }
 }

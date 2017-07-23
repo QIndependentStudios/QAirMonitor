@@ -109,10 +109,14 @@
   <ItemGroup>
     <Compile Include="NotifyActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadingsAppServiceTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>5.3.3</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>10.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
